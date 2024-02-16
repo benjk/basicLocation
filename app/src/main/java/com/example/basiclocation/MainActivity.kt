@@ -13,6 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.basiclocation.ui.theme.BasicLocationTheme
 import android.Manifest
+import android.widget.Toast
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 
 class MainActivity : ComponentActivity() {
 
@@ -47,6 +50,10 @@ class MainActivity : ComponentActivity() {
         locationPermissionRequest.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION))
+
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS) {
+            Toast.makeText(this, "Vous devez installer Google Play, pour pouvoir utiliser cette appli", Toast.LENGTH_LONG).show()
+        }
     }
 }
 
