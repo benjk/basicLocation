@@ -32,7 +32,13 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 class MainActivity : ComponentActivity() {
 
@@ -54,7 +60,22 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
-                ) {}
+                ) {
+                    val defaultPosition = LatLng(50.7367584, 2.251196)
+                    val cameraPositionState = rememberCameraPositionState {
+                        position = CameraPosition.fromLatLngZoom(defaultPosition, 10f)
+                    }
+                    GoogleMap(
+                        modifier = Modifier.fillMaxSize(),
+                        cameraPositionState = cameraPositionState
+                    ) {
+                        Marker(
+                            state = MarkerState(position = defaultPosition),
+                            title = "La Maison",
+                            snippet = "20 rue Edouard Herriot"
+                        )
+                    }
+                }
             }
         }
 
