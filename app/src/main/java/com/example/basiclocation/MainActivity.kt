@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     createLocationRequest()
                 } else -> {
                 Toast.makeText(this, "Autorisez la localisation, pour utiliser l'appli", Toast.LENGTH_LONG).show()
-            }
+                }
             }
         }
 
@@ -160,5 +160,14 @@ class MainActivity : ComponentActivity() {
         fusedLocationClient.requestLocationUpdates(locationRequest,
             locationCallback,
             Looper.getMainLooper())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 }
