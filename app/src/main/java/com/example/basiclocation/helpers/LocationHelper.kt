@@ -2,9 +2,11 @@ package com.example.basiclocation.helpers
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.location.Location
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,16 +19,16 @@ import com.google.android.gms.location.Priority
 
 class LocationHelper(private val activity: ComponentActivity) {
     private val TAG = "LocationHelper"
+    private val REQUEST_CHECK_SETTINGS = 0x1
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
-    private lateinit var locationRequest: LocationRequest
+    private var fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
+    private var locationCallback: LocationCallback
+    private var locationRequest: LocationRequest
 
     private var onLocationUpdateListener: ((Location) -> Unit)? = null
     private var locationPermissionLauncher: ActivityResultLauncher<Array<String>>? = null
 
     init {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
         locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
             .setMinUpdateIntervalMillis(2000)
@@ -68,6 +70,17 @@ class LocationHelper(private val activity: ComponentActivity) {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ))
+    }
+
+    fun handleActivityResult(requestCode: Int, resultCode: Int) {
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "Location settings enabled")
+            } else {
+                Log.e(TAG, "Location settings NOT enabled")
+                Toast.makeText(activity, "Activez la localisation pour utiliser l'appli", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")

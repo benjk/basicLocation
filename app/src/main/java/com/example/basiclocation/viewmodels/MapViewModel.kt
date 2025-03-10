@@ -3,13 +3,11 @@ package com.example.basiclocation.viewmodels
 import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.basiclocation.helpers.LocationHelper
 import com.example.basiclocation.model.PointOfInterest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class MapViewModel(
     private val locationHelper: LocationHelper
@@ -26,25 +24,60 @@ class MapViewModel(
     private var poiProximityTimeMap = mutableMapOf<String, Long>()
 
     init {
+        // Load initial POIs (this would come from a repository in a real app)
+        loadSamplePOIs()
+
         // Setup location updates
         locationHelper.setLocationUpdateListener { location ->
             _locationState.value = location
             checkForNearbyPOIs(location)
         }
 
-        // Load initial POIs (this would come from a repository in a real app)
-        loadSamplePOIs()
+        // Récupérer la dernière position connue au démarrage
+        locationHelper.getLastLocation { location ->
+            location?.let {
+                _locationState.value = it
+                checkForNearbyPOIs(it)
+            }
+        }
     }
 
     private fun loadSamplePOIs() {
         _pointsOfInterest.value = listOf(
             PointOfInterest(
                 id = "poi_1",
-                name = "La Maison",
-                description = "20 rue Edouard Herriot",
-                latitude = 50.7367584,
-                longitude = 2.251196,
-                triggerRadiusMeters = 50,
+                name = "Derrière le garage",
+                description = "20 rue Edouard Herriot - Garage 1",
+                latitude = 50.736888,
+                longitude = 2.251257,
+                triggerRadiusMeters = 5,
+                minTimeToTriggerSeconds = 10
+            ),
+            PointOfInterest(
+                id = "poi_4",
+                name = "Devant le garage",
+                description = "20 rue Edouard Herriot - Garage 2",
+                latitude = 50.736915,
+                longitude = 2.251172,
+                triggerRadiusMeters = 5,
+                minTimeToTriggerSeconds = 10
+            ),
+            PointOfInterest(
+                id = "poi_5",
+                name = "Devant la maison",
+                description = "20 rue Edouard Herriot - DEVANT",
+                latitude = 50.736996,
+                longitude = 2.251001,
+                triggerRadiusMeters = 5,
+                minTimeToTriggerSeconds = 10
+            ),
+            PointOfInterest(
+                id = "poi_6",
+                name = "Fond du jardin",
+                description = "20 rue Edouard Herriot - Jardin",
+                latitude = 50.736834,
+                longitude = 2.251214,
+                triggerRadiusMeters = 5,
                 minTimeToTriggerSeconds = 10
             ),
             PointOfInterest(
@@ -70,28 +103,12 @@ class MapViewModel(
     }
 
     private fun checkForNearbyPOIs(userLocation: Location) {
-        viewModelScope.launch {
-            val currentTime = System.currentTimeMillis()
-
-            for (poi in _pointsOfInterest.value) {
+        // Ne notifier que pour un nouveau POI à proximité
+        if (_nearbyPointOfInterest.value == null) {
+            _pointsOfInterest.value.forEach { poi ->
                 if (poi.isUserNearby(userLocation)) {
-                    // User is near this POI
-                    if (!poiProximityTimeMap.containsKey(poi.id)) {
-                        // First time near this POI - record time
-                        poiProximityTimeMap[poi.id] = currentTime
-                    } else {
-                        // Was already near - check duration
-                        val firstSeenTime = poiProximityTimeMap[poi.id] ?: currentTime
-                        val durationSeconds = (currentTime - firstSeenTime) / 1000
-
-                        // If user has been near POI for minimum required time
-                        if (durationSeconds >= poi.minTimeToTriggerSeconds) {
-                            _nearbyPointOfInterest.value = poi
-                        }
-                    }
-                } else {
-                    // User is not near this POI anymore
-                    poiProximityTimeMap.remove(poi.id)
+                    _nearbyPointOfInterest.value = poi
+                    return
                 }
             }
         }

@@ -1,8 +1,9 @@
 package com.example.basiclocation
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,16 +22,22 @@ import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.ui.comp.MapComponent
 import com.example.basiclocation.ui.comp.PointOfInterestCardDetail
 import com.example.basiclocation.viewmodels.MapViewModel
+import org.osmdroid.config.Configuration
 
 class MapActivity : ComponentActivity() {
-    private val TAG = "MainActivity"
-    private val REQUEST_CHECK_SETTINGS = 0x1
+    private val TAG = "MapActivity"
 
     private lateinit var locationHelper: LocationHelper
     private lateinit var googlePlayServicesHelper: GooglePlayServicesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Configuration OSMDroid - IMPORTANT de le faire avant d'utiliser MapView
+        Configuration.getInstance().load(
+            applicationContext,
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        )
 
         // Initialize helpers
         locationHelper = LocationHelper(this)
@@ -42,7 +49,7 @@ class MapActivity : ComponentActivity() {
                 checkGooglePlayAndLocationSettings()
             },
             onPermissionDenied = {
-                Toast.makeText(this, "Autorisez la localisation, pour utiliser l'appli", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "La localisation n'est pas encore autorisé sur cet appareil")
             }
         )
 
@@ -73,7 +80,6 @@ class MapActivity : ComponentActivity() {
                             pointOfInterest = poi,
                             onDismiss = {
                                 selectedPOI = null
-                                // Clear from viewModel if it was triggered by proximity
                                 mapViewModel.clearNearbyPointOfInterest()
                             }
                         )
@@ -94,9 +100,9 @@ class MapActivity : ComponentActivity() {
 
         googlePlayServicesHelper.checkLocationSettings(
             onSuccess = {
-                // Location settings satisfied, nothing to do - the ViewModel will handle updates
+                Log.d(TAG, "L'appareil est correctement configuré : Location & Google Play")
             },
-            onFailure = { exception ->
+            onFailure = { _ ->
                 // The googlePlayServicesHelper will show the dialog to enable location
             }
         )
@@ -104,13 +110,18 @@ class MapActivity : ComponentActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CHECK_SETTINGS) {
-            if (resultCode == Activity.RESULT_OK) {
-                // Location settings enabled by user
-                // The ViewModel will handle location updates automatically
-            } else {
-                Toast.makeText(this, "Activez la localisation, pour utiliser l'appli", Toast.LENGTH_LONG).show()
-            }
+        locationHelper.handleActivityResult(requestCode, resultCode)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Just if configuration failed in onCreate
+        if (Configuration.getInstance().userAgentValue.isNullOrEmpty()) {
+            Configuration.getInstance().load(
+                applicationContext,
+                PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            )
         }
     }
+
 }

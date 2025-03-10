@@ -70,6 +70,15 @@ dependencies {
 
     // Mes Libs
     implementation("com.google.android.gms:play-services-location:21.1.0")
-    implementation ("com.google.maps.android:maps-compose:2.11.4")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
+    // OSMDroid
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation ("org.osmdroid:osmdroid-mapsforge:6.1.16")
+    implementation("org.osmdroid:osmdroid-geopackage:6.1.16") {
+        exclude(group = "org.osmdroid.gpkg")
+        exclude(module = "ormlite-core")
+        exclude(group = "com.j256.ormlite")
+    }
+
 }
