@@ -1,6 +1,8 @@
 package com.example.basiclocation.viewmodels
 
 import android.location.Location
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.basiclocation.helpers.LocationHelper
@@ -15,13 +17,11 @@ class MapViewModel(
     private val _locationState = MutableStateFlow<Location?>(null)
     val locationState: StateFlow<Location?> = _locationState.asStateFlow()
 
-    private val _pointsOfInterest = MutableStateFlow<List<PointOfInterest>>(emptyList())
-    val pointsOfInterest: StateFlow<List<PointOfInterest>> = _pointsOfInterest.asStateFlow()
+    private val _pointsOfInterest = mutableStateOf<List<PointOfInterest>>(emptyList())
+    val pointsOfInterest: State<List<PointOfInterest>> = _pointsOfInterest
 
     private val _nearbyPointOfInterest = MutableStateFlow<PointOfInterest?>(null)
     val nearbyPointOfInterest: StateFlow<PointOfInterest?> = _nearbyPointOfInterest.asStateFlow()
-
-    private var poiProximityTimeMap = mutableMapOf<String, Long>()
 
     init {
         // Load initial POIs (this would come from a repository in a real app)

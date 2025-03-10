@@ -27,21 +27,29 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun MapComponent(
     viewModel: MapViewModel,
-    onPointOfInterestClicked: (PointOfInterest) -> Unit
+    onPointOfInterestClicked: (PointOfInterest) -> Unit,
+    onPointOfInterestReached: (PointOfInterest) -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
 
     // Collect state from ViewModel
     val location by viewModel.locationState.collectAsState()
-    val pointsOfInterest by viewModel.pointsOfInterest.collectAsState()
     val nearbyPOI by viewModel.nearbyPointOfInterest.collectAsState()
+    val pointsOfInterest = viewModel.pointsOfInterest.value
+
+    // Pour ne centrer la carte que la première fois (au démarrage)
+    val initCenter = remember { mutableStateOf(false) }
 
     val mapViewRef = remember { mutableStateOf<MapView?>(null) }
 
     // Gestion des POIs à proximité
     LaunchedEffect(nearbyPOI) {
-        nearbyPOI?.let { onPointOfInterestClicked(it) }
+        nearbyPOI?.let {
+            // Centre la carte sur le POI trouvé
+            mapViewRef.value?.controller?.animateTo(GeoPoint(it.latitude, it.longitude))
+            onPointOfInterestReached(it)
+        }
     }
 
     // Lifecycle observer to handle location updates
@@ -70,8 +78,6 @@ fun MapComponent(
     fun updateMapView(
         mapView: MapView,
         location: Location?,
-        pointsOfInterest: List<PointOfInterest>,
-        onPointOfInterestClicked: (PointOfInterest) -> Unit,
         context: Context
     ) {
         // Mise à jour de la carte uniquement si on a une localisation
@@ -79,8 +85,11 @@ fun MapComponent(
             // Convertir la localisation en GeoPoint
             val userGeoPoint = GeoPoint(userLocation.latitude, userLocation.longitude)
 
-            // Déplacer la caméra vers la position de l'utilisateur
-            mapView.controller.animateTo(userGeoPoint)
+            // Déplacer la caméra vers la position de l'utilisateur **uniquement au démarrage**
+            if (!initCenter.value) {
+                mapView.controller.animateTo(userGeoPoint)
+                initCenter.value = true // Marque que le centrage a été fait
+            }
 
             // Supprimer les anciens overlays
             mapView.overlays.clear()
@@ -98,9 +107,6 @@ fun MapComponent(
                 val poiMarker = Marker(mapView).apply {
                     position = GeoPoint(poi.latitude, poi.longitude)
                     title = poi.name
-                    snippet = poi.description
-
-                    // Gestion du clic
                     setOnMarkerClickListener { _, _ ->
                         onPointOfInterestClicked(poi)
                         true // Consommer l'événement
@@ -132,7 +138,7 @@ fun MapComponent(
             }
         },
         update = { mapView ->
-            updateMapView(mapView, location, pointsOfInterest, onPointOfInterestClicked, context)
+            updateMapView(mapView, location, context)
         }
     )
 }
