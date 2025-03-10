@@ -65,10 +65,12 @@ fun MapComponent(
                     mapViewModel.startLocationUpdates()
                     mapViewRef.value?.onResume()
                 }
+
                 Lifecycle.Event.ON_PAUSE -> {
                     mapViewModel.stopLocationUpdates()
                     mapViewRef.value?.onPause()
                 }
+
                 else -> {}
             }
         }
@@ -136,14 +138,14 @@ fun MapComponent(
                 controller.setZoom(mapViewModel.zoomState.value)
                 controller.setCenter(mapViewModel.positionState.value)
 
+                minZoomLevel = MapViewModel.MapDefaults.DEZOOM_MIN
+                maxZoomLevel = MapViewModel.MapDefaults.ZOOM_MAX
 
                 this.addMapListener(object : MapListener {
                     override fun onScroll(event: ScrollEvent?): Boolean {
-                        val currentPosition = this@apply.mapCenter  // Utilisation de getMapCenter() ou mapCenter directement
-                        Log.e("Map", "CC LE GEO SCROLL: " + currentPosition)
+                        val currentPosition = this@apply.mapCenter
                         if (currentPosition is GeoPoint) {
-                        Log.e("Map", "EHOUAI STUN GEOPOIIIIIIIIIIIIIIIIIIIIIIINT: " + currentPosition)
-                            mapViewModel.updatePosition(currentPosition) // Met à jour la position dans le ViewModel
+                            mapViewModel.updatePosition(currentPosition)
                         } else {
                             Log.e("Map", "La position n'est pas un GeoPoint")
                         }
@@ -152,7 +154,9 @@ fun MapComponent(
 
                     override fun onZoom(event: ZoomEvent?): Boolean {
                         val zoom = event?.zoomLevel
-                        mapViewModel.updateZoom(zoom) // Mettre à jour la position et le zoom
+                        if (zoom != null && (zoom < maxZoomLevel || zoom > minZoomLevel)) {
+                            mapViewModel.updateZoom(zoom)
+                        }
                         return false
                     }
                 })

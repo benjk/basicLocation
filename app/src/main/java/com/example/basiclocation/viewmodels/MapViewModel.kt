@@ -14,15 +14,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.osmdroid.util.GeoPoint
 
-// Constants for default map position and zoom level
-object MapDefaults {
-    val DEFAULT_POSITION = GeoPoint(48.856614, 2.3522219) // Paris
-    const val DEFAULT_ZOOM = 20.0
-}
-
 class MapViewModel(
     private val locationHelper: LocationHelper
 ) : ViewModel() {
+    // Constants for default map position and zoom level
+    object MapDefaults {
+        val DEFAULT_POSITION = GeoPoint(50.73678, 2.243631) // Longuenesse Mairie
+        const val DEFAULT_ZOOM = 20.0
+        const val DEZOOM_MIN = 15.0
+        const val ZOOM_MAX = 21.0
+    }
+
     var initCenter = MutableLiveData(false)
 
     fun markCenterInitialized() {
@@ -37,10 +39,10 @@ class MapViewModel(
 
     fun updatePosition(position: GeoPoint?) {
         _positionState.value = position ?: MapDefaults.DEFAULT_POSITION
-        Log.e("ZZZ", "nouvelle pos : " + _positionState.value)
     }
 
     fun updateZoom(zoom: Double?) {
+        Log.e("ZZZ", "nouvelle ZOOM VALUE : " + zoom)
         _zoomState.value = zoom ?: MapDefaults.DEFAULT_ZOOM
     }
 
