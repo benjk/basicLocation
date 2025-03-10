@@ -18,8 +18,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.basiclocation.helpers.GooglePlayServicesHelper
 import com.example.basiclocation.helpers.LocationHelper
 import com.example.basiclocation.model.PointOfInterest
-import com.example.basiclocation.ui.theme.MapComponent
-import com.example.basiclocation.ui.theme.PointOfInterestCardDetail
+import com.example.basiclocation.ui.comp.MapComponent
+import com.example.basiclocation.ui.comp.PointOfInterestCardDetail
 import com.example.basiclocation.viewmodels.MapViewModel
 
 class MapActivity : ComponentActivity() {
