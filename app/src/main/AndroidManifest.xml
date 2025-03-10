@@ -20,7 +20,7 @@
         android:theme="@style/Theme.BasicLocation"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".MapActivity"
             android:exported="true"
             android:theme="@style/Theme.BasicLocation">
             <intent-filter>
