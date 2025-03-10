@@ -2,12 +2,14 @@ package com.example.basiclocation.ui.comp
 
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +21,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.viewmodels.MapViewModel
+import org.osmdroid.events.MapListener
+import org.osmdroid.events.ScrollEvent
+import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -26,7 +31,7 @@ import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun MapComponent(
-    viewModel: MapViewModel,
+    mapViewModel: MapViewModel,
     onPointOfInterestClicked: (PointOfInterest) -> Unit,
     onPointOfInterestReached: (PointOfInterest) -> Unit
 ) {
@@ -34,12 +39,12 @@ fun MapComponent(
     val context = LocalContext.current
 
     // Collect state from ViewModel
-    val location by viewModel.locationState.collectAsState()
-    val nearbyPOI by viewModel.nearbyPointOfInterest.collectAsState()
-    val pointsOfInterest = viewModel.pointsOfInterest.value
+    val location by mapViewModel.locationState.collectAsState()
+    val nearbyPOI by mapViewModel.nearbyPointOfInterest.collectAsState()
+    val pointsOfInterest = mapViewModel.pointsOfInterest.value
 
     // Pour ne centrer la carte que la première fois (au démarrage)
-    val initCenter = remember { mutableStateOf(false) }
+    val initCenter = mapViewModel.initCenter.observeAsState(false)
 
     val mapViewRef = remember { mutableStateOf<MapView?>(null) }
 
@@ -57,11 +62,11 @@ fun MapComponent(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.startLocationUpdates()
+                    mapViewModel.startLocationUpdates()
                     mapViewRef.value?.onResume()
                 }
                 Lifecycle.Event.ON_PAUSE -> {
-                    viewModel.stopLocationUpdates()
+                    mapViewModel.stopLocationUpdates()
                     mapViewRef.value?.onPause()
                 }
                 else -> {}
@@ -88,7 +93,7 @@ fun MapComponent(
             // Déplacer la caméra vers la position de l'utilisateur **uniquement au démarrage**
             if (!initCenter.value) {
                 mapView.controller.animateTo(userGeoPoint)
-                initCenter.value = true // Marque que le centrage a été fait
+                mapViewModel.markCenterInitialized()
             }
 
             // Supprimer les anciens overlays
@@ -128,11 +133,29 @@ fun MapComponent(
                 setMultiTouchControls(true)
                 setTileSource(TileSourceFactory.MAPNIK)
 
-                // Zoom initial
-                controller.setZoom(20.0)
+                controller.setZoom(mapViewModel.zoomState.value)
+                controller.setCenter(mapViewModel.positionState.value)
 
-                // Position par défaut (Paris)
-                controller.setCenter(GeoPoint(48.856614, 2.3522219))
+
+                this.addMapListener(object : MapListener {
+                    override fun onScroll(event: ScrollEvent?): Boolean {
+                        val currentPosition = this@apply.mapCenter  // Utilisation de getMapCenter() ou mapCenter directement
+                        Log.e("Map", "CC LE GEO SCROLL: " + currentPosition)
+                        if (currentPosition is GeoPoint) {
+                        Log.e("Map", "EHOUAI STUN GEOPOIIIIIIIIIIIIIIIIIIIIIIINT: " + currentPosition)
+                            mapViewModel.updatePosition(currentPosition) // Met à jour la position dans le ViewModel
+                        } else {
+                            Log.e("Map", "La position n'est pas un GeoPoint")
+                        }
+                        return false
+                    }
+
+                    override fun onZoom(event: ZoomEvent?): Boolean {
+                        val zoom = event?.zoomLevel
+                        mapViewModel.updateZoom(zoom) // Mettre à jour la position et le zoom
+                        return false
+                    }
+                })
 
                 mapViewRef.value = this
             }

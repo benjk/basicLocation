@@ -1,8 +1,10 @@
 package com.example.basiclocation.viewmodels
 
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.basiclocation.helpers.LocationHelper
@@ -10,10 +12,38 @@ import com.example.basiclocation.model.PointOfInterest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.osmdroid.util.GeoPoint
+
+// Constants for default map position and zoom level
+object MapDefaults {
+    val DEFAULT_POSITION = GeoPoint(48.856614, 2.3522219) // Paris
+    const val DEFAULT_ZOOM = 20.0
+}
 
 class MapViewModel(
     private val locationHelper: LocationHelper
 ) : ViewModel() {
+    var initCenter = MutableLiveData(false)
+
+    fun markCenterInitialized() {
+        initCenter.value = true
+    }
+
+    private val _positionState = mutableStateOf(MapDefaults.DEFAULT_POSITION)
+    val positionState: State<GeoPoint> = _positionState
+
+    private val _zoomState = mutableStateOf(MapDefaults.DEFAULT_ZOOM)
+    val zoomState: State<Double> = _zoomState
+
+    fun updatePosition(position: GeoPoint?) {
+        _positionState.value = position ?: MapDefaults.DEFAULT_POSITION
+        Log.e("ZZZ", "nouvelle pos : " + _positionState.value)
+    }
+
+    fun updateZoom(zoom: Double?) {
+        _zoomState.value = zoom ?: MapDefaults.DEFAULT_ZOOM
+    }
+
     private val _locationState = MutableStateFlow<Location?>(null)
     val locationState: StateFlow<Location?> = _locationState.asStateFlow()
 

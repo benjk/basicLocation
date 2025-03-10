@@ -68,7 +68,7 @@ class MapActivity : ComponentActivity() {
                 ) {
                     // Map Component
                     MapComponent(
-                        viewModel = mapViewModel,
+                        mapViewModel = mapViewModel,
                         onPointOfInterestClicked = { poi ->
                             Toast.makeText(this, "Retrouvez ${poi.name} pour + d'infos !", Toast.LENGTH_SHORT).show()
 
