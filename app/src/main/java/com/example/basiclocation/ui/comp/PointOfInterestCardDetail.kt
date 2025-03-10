@@ -51,7 +51,7 @@ fun PointOfInterestCardDetail(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(onClick = onDismiss) {
-                    Text("Continue")
+                    Text("Continuer")
                 }
             }
         }

@@ -19,6 +19,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.example.basiclocation.R
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.viewmodels.MapViewModel
 import org.osmdroid.events.MapListener
@@ -101,19 +102,12 @@ fun MapComponent(
             // Supprimer les anciens overlays
             mapView.overlays.clear()
 
-            // Ajouter le marqueur de l'utilisateur
-            val userMarker = Marker(mapView).apply {
-                position = userGeoPoint
-                title = "Votre position"
-                icon = ContextCompat.getDrawable(context, android.R.drawable.ic_menu_mylocation)
-            }
-            mapView.overlays.add(userMarker)
-
             // Ajouter les marqueurs des POIs
             pointsOfInterest.forEach { poi ->
                 val poiMarker = Marker(mapView).apply {
                     position = GeoPoint(poi.latitude, poi.longitude)
                     title = poi.name
+                    icon = ContextCompat.getDrawable(context, R.drawable.location_pin)
                     setOnMarkerClickListener { _, _ ->
                         onPointOfInterestClicked(poi)
                         true // Consommer l'événement
@@ -121,6 +115,14 @@ fun MapComponent(
                 }
                 mapView.overlays.add(poiMarker)
             }
+
+            // Ajouter le marqueur de l'utilisateur
+            val userMarker = Marker(mapView).apply {
+                position = userGeoPoint
+                title = "Votre position"
+                icon = ContextCompat.getDrawable(context, R.drawable.user_icon)
+            }
+            mapView.overlays.add(userMarker)
 
             // Forcer le rafraîchissement de la carte
             mapView.invalidate()
