@@ -1,12 +1,10 @@
 package com.example.basiclocation.ui.comp
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.location.Location
 import android.util.Log
+import android.view.View
+import android.view.View.INVISIBLE
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -27,11 +25,16 @@ import com.example.basiclocation.R
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.viewmodels.MapViewModel
 import com.example.basiclocation.viewmodels.POIViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
@@ -117,21 +120,39 @@ fun MapComponent(
                 overlay !is Marker || overlay.id == null // Garder les marqueurs de POI (ceux avec un ID)
             }
 
-            // Ajouter les marqueurs des POIs
+            // Ajouter le marqueur de l'utilisateur en premier pour qu'il soit derrière
+            val userMarker = Marker(mapView).apply {
+                position = userGeoPoint
+                title = "Votre position"
+                icon = ContextCompat.getDrawable(context, R.drawable.user_icon)
+            }
+            mapView.overlays.add(0, userMarker)
+
+            // Ajouter les marqueurs des POI
             pointsOfInterest?.forEach { poi ->
                 val existingMarker = mapView.overlays.find { it is Marker && it.id == poi.id } as? Marker
                 if (existingMarker == null) {
                     val iconId = if (poi.reached) R.drawable.location_pin_reached else R.drawable.location_pin
+                    val iconRes = ContextCompat.getDrawable(context, iconId)
+                    iconRes?.alpha = (0.7 * 255).toInt()
                     val poiMarker = Marker(mapView).apply {
                         position = GeoPoint(poi.latitude, poi.longitude)
                         title = poi.name
                         id = poi.id
-                        icon = ContextCompat.getDrawable(context, iconId)
+                        icon = iconRes
                         setOnMarkerClickListener { _, _ ->
-                            if (poi.reached) {
-                                onPointOfInterestReached(poi)
-                            } else {
-                                onPointOfInterestClicked(poi)
+                            CoroutineScope(Dispatchers.Main).launch {
+                                val startTime = System.currentTimeMillis()
+
+                                delay(100) // Laissez un peu de temps à OSMDroid
+                                if (poi.reached) {
+                                    onPointOfInterestReached(poi)
+                                } else {
+                                    onPointOfInterestClicked(poi)
+                                }
+
+                                val endTime = System.currentTimeMillis()
+                                Log.d("PERF", "Temps de traitement du clic : ${endTime - startTime} ms")
                             }
                             true
                         }
@@ -139,14 +160,6 @@ fun MapComponent(
                     mapView.overlays.add(poiMarker)
                 }
             }
-
-            // Ajouter le marqueur de l'utilisateur
-            val userMarker = Marker(mapView).apply {
-                position = userGeoPoint
-                title = "Votre position"
-                icon = ContextCompat.getDrawable(context, R.drawable.user_icon)
-            }
-            mapView.overlays.add(userMarker)
 
             // Forcer le rafraîchissement de la carte
             mapView.invalidate()
@@ -188,6 +201,8 @@ fun MapComponent(
             MapView(ctx).apply {
                 // Configuration initiale de la carte
                 setMultiTouchControls(true)
+                zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
+
                 setTileSource(TileSourceFactory.MAPNIK)
 
                 controller.setZoom(mapViewModel.zoomState.value)
