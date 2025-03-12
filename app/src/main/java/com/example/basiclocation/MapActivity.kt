@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.basiclocation.helpers.GooglePlayServicesHelper
 import com.example.basiclocation.helpers.LocationHelper
+import com.example.basiclocation.helpers.PoiRepository
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.ui.comp.MapComponent
 import com.example.basiclocation.ui.comp.PoiComponent
@@ -56,13 +57,15 @@ class MapActivity : ComponentActivity() {
         )
 
         setContent {
+            val poiRepository = PoiRepository()
+
             // Create ViewModel
             val mapViewModel: MapViewModel = viewModel(
-                factory = MapViewModel.Factory(locationHelper)
+                factory = MapViewModel.Factory(locationHelper, poiRepository)
             )
 
             val poiViewModel: POIViewModel = viewModel(
-                factory = POIViewModel.Factory(application)
+                factory = POIViewModel.Factory(application, poiRepository)
             )
 
             var reachedPOI by remember { mutableStateOf<PointOfInterest?>(null) }

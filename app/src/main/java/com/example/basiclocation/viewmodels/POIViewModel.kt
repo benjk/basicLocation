@@ -8,14 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import coil.Coil
-import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.example.basiclocation.helpers.PoiRepository
 import com.example.basiclocation.model.PointOfInterest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class POIViewModel(
     private val application: Application,
+    private val poiRepository: PoiRepository
 ) : ViewModel() {
 
     private val context = application;
@@ -38,7 +39,7 @@ class POIViewModel(
                 description = "Un haut lieu de la tech du secteur audomarois",
                 latitude = 50.736942,
                 longitude = 2.251044,
-                triggerRadiusMeters = 5,
+                triggerRadiusMeters = 15,
                 minTimeToTriggerSeconds = 6
             ),
             PointOfInterest(
@@ -105,6 +106,7 @@ class POIViewModel(
         )
 
         _poiList.value = pois
+        poiRepository.setPois(pois)
 
         prechargeImages(pois);
     }
@@ -147,11 +149,12 @@ class POIViewModel(
         }
     }
 
-    class Factory(private val application: Application) : ViewModelProvider.Factory {
+
+    class Factory(private val application: Application, private val poiRepository: PoiRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(POIViewModel::class.java)) {
-                return POIViewModel(application) as T
+                return POIViewModel(application, poiRepository) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

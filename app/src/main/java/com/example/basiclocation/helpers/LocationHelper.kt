@@ -37,7 +37,6 @@ class LocationHelper(private val activity: ComponentActivity) {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    Log.d(TAG, "Location update: ${location.latitude}, ${location.longitude}")
                     onLocationUpdateListener?.invoke(location)
                 }
             }

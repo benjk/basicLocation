@@ -1,14 +1,14 @@
 package com.example.basiclocation.viewmodels
 
 import android.location.Location
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import coil.ImageLoader
 import com.example.basiclocation.helpers.LocationHelper
+import com.example.basiclocation.helpers.PoiRepository
 import com.example.basiclocation.model.PointOfInterest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.osmdroid.util.GeoPoint
 
 class MapViewModel(
-    private val locationHelper: LocationHelper
+    private val locationHelper: LocationHelper,
+    private val poiRepository: PoiRepository
 ) : ViewModel() {
     // Constants for default map position and zoom level
     object MapDefaults {
@@ -49,8 +50,7 @@ class MapViewModel(
     private val _locationState = MutableStateFlow<Location?>(null)
     val locationState: StateFlow<Location?> = _locationState.asStateFlow()
 
-    private val _pointsOfInterest = mutableStateOf<List<PointOfInterest>>(emptyList())
-    val pointsOfInterest: State<List<PointOfInterest>> = _pointsOfInterest
+    val pointsOfInterest: LiveData<List<PointOfInterest>> = poiRepository.pois
 
     private val _nearbyPointOfInterest = MutableStateFlow<PointOfInterest?>(null)
     val nearbyPointOfInterest: StateFlow<PointOfInterest?> = _nearbyPointOfInterest.asStateFlow()
@@ -72,9 +72,9 @@ class MapViewModel(
     }
 
     private fun checkForNearbyPOIs(userLocation: Location) {
-        // Ne notifier que pour un nouveau POI à proximité
+        val poisList = pointsOfInterest.value ?: emptyList()
         if (_nearbyPointOfInterest.value == null) {
-            _pointsOfInterest.value.forEach { poi ->
+            for (poi in poisList) {
                 if (poi.isUserNearby(userLocation)) {
                     _nearbyPointOfInterest.value = poi
                     return
@@ -82,6 +82,7 @@ class MapViewModel(
             }
         }
     }
+
 
     fun clearNearbyPointOfInterest() {
         _nearbyPointOfInterest.value = null
@@ -100,11 +101,11 @@ class MapViewModel(
         stopLocationUpdates()
     }
 
-    class Factory(private val locationHelper: LocationHelper) : ViewModelProvider.Factory {
+    class Factory(private val locationHelper: LocationHelper, private val poiRepository: PoiRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MapViewModel::class.java)) {
-                return MapViewModel(locationHelper) as T
+                return MapViewModel(locationHelper, poiRepository) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
