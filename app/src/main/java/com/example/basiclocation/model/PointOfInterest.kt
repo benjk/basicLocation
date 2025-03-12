@@ -11,7 +11,7 @@ data class PointOfInterest(
     val longitude: Double,
     val triggerRadiusMeters: Int = 50,
     val minTimeToTriggerSeconds: Int = 5,
-    val iconResourceId: Int? = null
+    val imageName: String? = null
 ) {
     fun getLatLng(): LatLng = LatLng(latitude, longitude)
 

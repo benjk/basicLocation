@@ -82,4 +82,6 @@ dependencies {
         exclude(group = "com.j256.ormlite")
     }
 
+    // Image
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }

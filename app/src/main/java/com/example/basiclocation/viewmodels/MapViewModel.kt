@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
 import com.example.basiclocation.helpers.LocationHelper
 import com.example.basiclocation.model.PointOfInterest
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +20,8 @@ class MapViewModel(
 ) : ViewModel() {
     // Constants for default map position and zoom level
     object MapDefaults {
-        val DEFAULT_POSITION = GeoPoint(50.73678, 2.243631) // Longuenesse Mairie
-        const val DEFAULT_ZOOM = 20.0
+        val DEFAULT_POSITION = GeoPoint(50.750067, 2.251813) //Grd Place
+        const val DEFAULT_ZOOM = 16.5
         const val DEZOOM_MIN = 15.0
         const val ZOOM_MAX = 21.0
     }
@@ -42,7 +43,6 @@ class MapViewModel(
     }
 
     fun updateZoom(zoom: Double?) {
-        Log.e("ZZZ", "nouvelle ZOOM VALUE : " + zoom)
         _zoomState.value = zoom ?: MapDefaults.DEFAULT_ZOOM
     }
 
@@ -56,9 +56,6 @@ class MapViewModel(
     val nearbyPointOfInterest: StateFlow<PointOfInterest?> = _nearbyPointOfInterest.asStateFlow()
 
     init {
-        // Load initial POIs (this would come from a repository in a real app)
-        loadSamplePOIs()
-
         // Setup location updates
         locationHelper.setLocationUpdateListener { location ->
             _locationState.value = location
@@ -72,75 +69,6 @@ class MapViewModel(
                 checkForNearbyPOIs(it)
             }
         }
-    }
-
-    private fun loadSamplePOIs() {
-        _pointsOfInterest.value = listOf(
-            PointOfInterest(
-                id = "poi_0",
-                name = "Ma maison",
-                description = "Un haut lieu de la tech du secteur audomarois",
-                latitude = 50.736942,
-                longitude = 2.251044,
-                triggerRadiusMeters = 5,
-                minTimeToTriggerSeconds = 6
-            ),
-            PointOfInterest(
-                id = "poi_1",
-                name = "La Grand-Place",
-                description = "Le centre de névralgique de la cité audomaroise, on y retrouve le fameux Moulin à café, ancien hHôtel de ville aujourd'hui devenu un théâtre.",
-                latitude = 50.750067,
-                longitude = 2.251813,
-                triggerRadiusMeters = 20,
-                minTimeToTriggerSeconds = 10
-            ),
-            PointOfInterest(
-                id = "poi_2",
-                name = "La Cathédrale",
-                description = "Notre-Dame de Saint-Omer est une église catholique datant de 1879.",
-                latitude = 50.747345,
-                longitude = 2.252833,
-                triggerRadiusMeters = 40,
-                minTimeToTriggerSeconds = 8
-            ),
-            PointOfInterest(
-                id = "poi_3",
-                name = "Le Jardin Public",
-                description = "Mêlant nature, animaux, architecture et activités diverses, ce parc est un incontournable de la ville !",
-                latitude = 50.749609,
-                longitude = 2.249382,
-                triggerRadiusMeters = 50,
-                minTimeToTriggerSeconds = 10
-            ),
-            PointOfInterest(
-                id = "poi_4",
-                name = "Musée Sandelin",
-                description = "Le musée de l'hôtel Sandelin est un musée d'art et de l'histoire de la ville datant de 1904.",
-                latitude = 50.748989,
-                longitude = 2.25441,
-                triggerRadiusMeters = 25,
-                minTimeToTriggerSeconds = 10
-            ),
-            PointOfInterest(
-                id = "poi_5",
-                name = "La Gare",
-                description = "Ce bâtiment est l'un des plus beau de la ville, et abrite aujourd'hui encore une gare en fonctionnement ainsi que la Station, un espace communautaire symbolisant la transformation du territoire, réunissant entrepreneurs, industriels, étudiants et services autour de projets innovants",
-                latitude = 50.753598,
-                longitude = 2.266739,
-                triggerRadiusMeters = 25,
-                minTimeToTriggerSeconds = 10
-            ),
-            PointOfInterest(
-                id = "poi_6",
-                name = "Abbaye Saint-Bertin",
-                description = "Aujourd'hui en ruines, ce monument historique est une ancienne abbaye bénédictine datant de VIIème siècle.",
-                latitude = 50.750633,
-                longitude = 2.263839,
-                triggerRadiusMeters = 45,
-                minTimeToTriggerSeconds = 10
-            ),
-            // Add more sample POIs as needed
-        )
     }
 
     private fun checkForNearbyPOIs(userLocation: Location) {

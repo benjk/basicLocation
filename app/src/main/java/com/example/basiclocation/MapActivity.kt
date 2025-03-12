@@ -23,6 +23,7 @@ import com.example.basiclocation.ui.comp.MapComponent
 import com.example.basiclocation.ui.comp.PoiComponent
 import com.example.basiclocation.ui.comp.PointOfInterestCardDetail
 import com.example.basiclocation.viewmodels.MapViewModel
+import com.example.basiclocation.viewmodels.POIViewModel
 import org.osmdroid.config.Configuration
 
 class MapActivity : ComponentActivity() {
@@ -60,6 +61,10 @@ class MapActivity : ComponentActivity() {
                 factory = MapViewModel.Factory(locationHelper)
             )
 
+            val poiViewModel: POIViewModel = viewModel(
+                factory = POIViewModel.Factory(application)
+            )
+
             var reachedPOI by remember { mutableStateOf<PointOfInterest?>(null) }
             var clickedPOI by remember { mutableStateOf<PointOfInterest?>(null) }
 
@@ -71,6 +76,7 @@ class MapActivity : ComponentActivity() {
                     // Map Component
                     MapComponent(
                         mapViewModel = mapViewModel,
+                        poiViewModel = poiViewModel,
                         onPointOfInterestClicked = { poi ->
                             clickedPOI = poi;
                         },

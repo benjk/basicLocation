@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.example.basiclocation.R
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.viewmodels.MapViewModel
+import com.example.basiclocation.viewmodels.POIViewModel
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
@@ -33,6 +34,7 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun MapComponent(
     mapViewModel: MapViewModel,
+    poiViewModel: POIViewModel,
     onPointOfInterestClicked: (PointOfInterest) -> Unit,
     onPointOfInterestReached: (PointOfInterest) -> Unit
 ) {
@@ -42,7 +44,7 @@ fun MapComponent(
     // Collect state from ViewModel
     val location by mapViewModel.locationState.collectAsState()
     val nearbyPOI by mapViewModel.nearbyPointOfInterest.collectAsState()
-    val pointsOfInterest = mapViewModel.pointsOfInterest.value
+    val pointsOfInterest = poiViewModel.poiList.value
 
     // Pour ne centrer la carte que la première fois (au démarrage)
     val initCenter = mapViewModel.initCenter.observeAsState(false)
@@ -103,7 +105,7 @@ fun MapComponent(
             mapView.overlays.clear()
 
             // Ajouter les marqueurs des POIs
-            pointsOfInterest.forEach { poi ->
+            pointsOfInterest?.forEach { poi ->
                 val poiMarker = Marker(mapView).apply {
                     position = GeoPoint(poi.latitude, poi.longitude)
                     title = poi.name
