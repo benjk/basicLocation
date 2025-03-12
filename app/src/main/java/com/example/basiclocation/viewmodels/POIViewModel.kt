@@ -48,7 +48,7 @@ class POIViewModel(
                 description = "Le centre de névralgique de la cité audomaroise, on y retrouve le fameux Moulin à café, ancien hHôtel de ville aujourd'hui devenu un théâtre.",
                 latitude = 50.750067,
                 longitude = 2.251813,
-                triggerRadiusMeters = 20,
+                triggerRadiusMeters = 5,
                 minTimeToTriggerSeconds = 10,
                 imageName = "poi_moulin"
             ),

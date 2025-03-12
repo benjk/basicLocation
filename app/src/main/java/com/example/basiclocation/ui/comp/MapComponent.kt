@@ -1,6 +1,10 @@
 package com.example.basiclocation.ui.comp
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +35,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
+
 @Composable
 fun MapComponent(
     mapViewModel: MapViewModel,
@@ -53,10 +58,16 @@ fun MapComponent(
 
     // Gestion des POIs à proximité
     LaunchedEffect(nearbyPOI) {
-        nearbyPOI?.let {
-            // Centre la carte sur le POI trouvé
-            mapViewRef.value?.controller?.animateTo(GeoPoint(it.latitude, it.longitude))
-            onPointOfInterestReached(it)
+        nearbyPOI?.let { poi ->
+            if (!poi.reached) {
+                // Centre la carte sur le POI trouvé
+                mapViewRef.value?.controller?.animateTo(GeoPoint(poi.latitude, poi.longitude))
+
+                poi.reached = true
+                updatePoi(context, mapViewRef.value, poi)
+
+                onPointOfInterestReached(poi)
+            }
         }
     }
 
@@ -101,21 +112,32 @@ fun MapComponent(
                 mapViewModel.markCenterInitialized()
             }
 
-            // Supprimer les anciens overlays
-            mapView.overlays.clear()
+            // Supprimer uniquement les overlays qui ne sont pas des marqueurs de POI
+            mapView.overlays.removeAll { overlay ->
+                overlay !is Marker || overlay.id == null // Garder les marqueurs de POI (ceux avec un ID)
+            }
 
             // Ajouter les marqueurs des POIs
             pointsOfInterest?.forEach { poi ->
-                val poiMarker = Marker(mapView).apply {
-                    position = GeoPoint(poi.latitude, poi.longitude)
-                    title = poi.name
-                    icon = ContextCompat.getDrawable(context, R.drawable.location_pin)
-                    setOnMarkerClickListener { _, _ ->
-                        onPointOfInterestClicked(poi)
-                        true // Consommer l'événement
+                val existingMarker = mapView.overlays.find { it is Marker && it.id == poi.id } as? Marker
+                if (existingMarker == null) {
+                    val iconId = if (poi.reached) R.drawable.location_pin_reached else R.drawable.location_pin
+                    val poiMarker = Marker(mapView).apply {
+                        position = GeoPoint(poi.latitude, poi.longitude)
+                        title = poi.name
+                        id = poi.id
+                        icon = ContextCompat.getDrawable(context, iconId)
+                        setOnMarkerClickListener { _, _ ->
+                            if (poi.reached) {
+                                onPointOfInterestReached(poi)
+                            } else {
+                                onPointOfInterestClicked(poi)
+                            }
+                            true
+                        }
                     }
+                    mapView.overlays.add(poiMarker)
                 }
-                mapView.overlays.add(poiMarker)
             }
 
             // Ajouter le marqueur de l'utilisateur
@@ -130,6 +152,35 @@ fun MapComponent(
             mapView.invalidate()
         }
     }
+
+//    fun updateMarkerSizes(zoomLevel: Double) {
+////        if (zoomLevel == mapViewModel.zoomState.value) { return }
+//        mapViewModel.updateZoom(zoomLevel)
+//        val mapView = mapViewRef.value ?: return
+//
+//        val baseSize = 100
+//        val minSize = 20
+//        val size = (baseSize * (zoomLevel / 20)).toInt().coerceAtLeast(minSize)
+//
+//        mapView.overlays.forEach { overlay ->
+//
+//            if (overlay is Marker) {
+//                val icon = overlay.icon
+//
+//                val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+//                val canvas = Canvas(bitmap)
+//                icon.setBounds(0, 0, canvas.width, canvas.height)
+//                icon.draw(canvas)
+//                val resizedBitmap = Bitmap.createScaledBitmap(bitmap, size, size, false)
+//                val resizedIcon = BitmapDrawable(context.resources, resizedBitmap)
+//                Log.d("kk", "kkkkkkkkkk : " + icon)
+//
+//                overlay.icon = resizedIcon
+//            }
+//        }
+//
+//        mapView.invalidate()
+//    }
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
@@ -172,4 +223,21 @@ fun MapComponent(
             updateMapView(mapView, location, context)
         }
     )
+}
+
+fun updatePoi(context: Context, mapView: MapView?, poi: PointOfInterest) {
+    if (mapView != null) {
+        val existingMarker = mapView.overlays.find { it is Marker && it.id == poi.id } as? Marker
+
+        if (existingMarker != null) {
+            // Mettre à jour l'icône du marqueur si nécessaire
+            val iconId = if (poi.reached) R.drawable.location_pin_reached else R.drawable.location_pin
+            if (existingMarker.icon != ContextCompat.getDrawable(context, iconId)) {
+                existingMarker.icon = ContextCompat.getDrawable(context, iconId)
+            }
+
+            // Rafraîchir la carte pour afficher les changements
+            mapView.invalidate()
+        }
+    }
 }
