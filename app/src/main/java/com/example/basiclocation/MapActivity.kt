@@ -20,6 +20,7 @@ import com.example.basiclocation.helpers.GooglePlayServicesHelper
 import com.example.basiclocation.helpers.LocationHelper
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.ui.comp.MapComponent
+import com.example.basiclocation.ui.comp.PoiComponent
 import com.example.basiclocation.ui.comp.PointOfInterestCardDetail
 import com.example.basiclocation.viewmodels.MapViewModel
 import org.osmdroid.config.Configuration
@@ -59,7 +60,8 @@ class MapActivity : ComponentActivity() {
                 factory = MapViewModel.Factory(locationHelper)
             )
 
-            var selectedPOI by remember { mutableStateOf<PointOfInterest?>(null) }
+            var reachedPOI by remember { mutableStateOf<PointOfInterest?>(null) }
+            var clickedPOI by remember { mutableStateOf<PointOfInterest?>(null) }
 
             MaterialTheme {
                 Surface(
@@ -70,21 +72,30 @@ class MapActivity : ComponentActivity() {
                     MapComponent(
                         mapViewModel = mapViewModel,
                         onPointOfInterestClicked = { poi ->
-                            Toast.makeText(this, "Retrouvez ${poi.name} pour + d'infos !", Toast.LENGTH_SHORT).show()
-
+                            clickedPOI = poi;
                         },
                         onPointOfInterestReached = { poi ->
-                            selectedPOI = poi
+                            reachedPOI = poi
                         }
                     )
 
+                    // Show POI Infos on click
+                    reachedPOI?.let { poi ->
+                        PoiComponent(
+                            pointOfInterest = poi,
+                            onDismiss = {
+                                reachedPOI = null
+                                mapViewModel.clearNearbyPointOfInterest()
+                            }
+                        )
+                    }
+
                     // Show POI detail dialog when selected
-                    selectedPOI?.let { poi ->
+                    clickedPOI?.let { poi ->
                         PointOfInterestCardDetail(
                             pointOfInterest = poi,
                             onDismiss = {
-                                selectedPOI = null
-                                mapViewModel.clearNearbyPointOfInterest()
+                                clickedPOI = null
                             }
                         )
                     }
@@ -127,5 +138,4 @@ class MapActivity : ComponentActivity() {
             )
         }
     }
-
 }

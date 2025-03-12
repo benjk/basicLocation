@@ -77,57 +77,66 @@ class MapViewModel(
     private fun loadSamplePOIs() {
         _pointsOfInterest.value = listOf(
             PointOfInterest(
+                id = "poi_0",
+                name = "Ma maison",
+                description = "Un haut lieu de la tech du secteur audomarois",
+                latitude = 50.736942,
+                longitude = 2.251044,
+                triggerRadiusMeters = 5,
+                minTimeToTriggerSeconds = 6
+            ),
+            PointOfInterest(
                 id = "poi_1",
-                name = "Derrière le garage",
-                description = "20 rue Edouard Herriot - Garage 1",
-                latitude = 50.736888,
-                longitude = 2.251257,
-                triggerRadiusMeters = 5,
-                minTimeToTriggerSeconds = 10
-            ),
-            PointOfInterest(
-                id = "poi_4",
-                name = "Devant le garage",
-                description = "20 rue Edouard Herriot - Garage 2",
-                latitude = 50.736915,
-                longitude = 2.251172,
-                triggerRadiusMeters = 5,
-                minTimeToTriggerSeconds = 10
-            ),
-            PointOfInterest(
-                id = "poi_5",
-                name = "Devant la maison",
-                description = "20 rue Edouard Herriot - DEVANT",
-                latitude = 50.736996,
-                longitude = 2.251001,
-                triggerRadiusMeters = 5,
-                minTimeToTriggerSeconds = 10
-            ),
-            PointOfInterest(
-                id = "poi_6",
-                name = "Fond du jardin",
-                description = "20 rue Edouard Herriot - Jardin",
-                latitude = 50.736834,
-                longitude = 2.251214,
-                triggerRadiusMeters = 5,
+                name = "La Grand-Place",
+                description = "Le centre de névralgique de la cité audomaroise, on y retrouve le fameux Moulin à café, ancien hHôtel de ville aujourd'hui devenu un théâtre.",
+                latitude = 50.750067,
+                longitude = 2.251813,
+                triggerRadiusMeters = 20,
                 minTimeToTriggerSeconds = 10
             ),
             PointOfInterest(
                 id = "poi_2",
-                name = "Le terrain de pétanque",
-                description = "Ci-git quelques paires de boules",
-                latitude = 50.744720,
-                longitude = 2.248714,
+                name = "La Cathédrale",
+                description = "Notre-Dame de Saint-Omer est une église catholique datant de 1879.",
+                latitude = 50.747345,
+                longitude = 2.252833,
+                triggerRadiusMeters = 40,
+                minTimeToTriggerSeconds = 8
+            ),
+            PointOfInterest(
+                id = "poi_3",
+                name = "Le Jardin Public",
+                description = "Mêlant nature, animaux, architecture et activités diverses, ce parc est un incontournable de la ville !",
+                latitude = 50.749609,
+                longitude = 2.249382,
+                triggerRadiusMeters = 50,
+                minTimeToTriggerSeconds = 10
+            ),
+            PointOfInterest(
+                id = "poi_4",
+                name = "Musée Sandelin",
+                description = "Le musée de l'hôtel Sandelin est un musée d'art et de l'histoire de la ville datant de 1904.",
+                latitude = 50.748989,
+                longitude = 2.25441,
                 triggerRadiusMeters = 25,
                 minTimeToTriggerSeconds = 10
             ),
             PointOfInterest(
-                id = "poi_3",
-                name = "Le parking des glacis",
-                description = "Gare toi là et profites en pour jeter tes bouteilles vides",
-                latitude = 50.744231,
-                longitude = 2.247671,
-                triggerRadiusMeters = 50,
+                id = "poi_5",
+                name = "La Gare",
+                description = "Ce bâtiment est l'un des plus beau de la ville, et abrite aujourd'hui encore une gare en fonctionnement ainsi que la Station, un espace communautaire symbolisant la transformation du territoire, réunissant entrepreneurs, industriels, étudiants et services autour de projets innovants",
+                latitude = 50.753598,
+                longitude = 2.266739,
+                triggerRadiusMeters = 25,
+                minTimeToTriggerSeconds = 10
+            ),
+            PointOfInterest(
+                id = "poi_6",
+                name = "Abbaye Saint-Bertin",
+                description = "Aujourd'hui en ruines, ce monument historique est une ancienne abbaye bénédictine datant de VIIème siècle.",
+                latitude = 50.750633,
+                longitude = 2.263839,
+                triggerRadiusMeters = 45,
                 minTimeToTriggerSeconds = 10
             ),
             // Add more sample POIs as needed

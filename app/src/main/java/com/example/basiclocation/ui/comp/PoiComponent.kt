@@ -18,7 +18,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.basiclocation.model.PointOfInterest
 
 @Composable
-fun PointOfInterestCardDetail(
+fun PoiComponent(
     pointOfInterest: PointOfInterest,
     onDismiss: () -> Unit
 ) {
@@ -26,7 +26,7 @@ fun PointOfInterestCardDetail(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -35,7 +35,7 @@ fun PointOfInterestCardDetail(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = pointOfInterest.name,
+                    text = "Bien joué tu as trouvé " + pointOfInterest.name,
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center
                 )
@@ -51,7 +51,7 @@ fun PointOfInterestCardDetail(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(onClick = onDismiss) {
-                    Text("Retour")
+                    Text("Continuer")
                 }
             }
         }
