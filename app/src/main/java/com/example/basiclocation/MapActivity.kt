@@ -11,6 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,6 +74,14 @@ class MapActivity : ComponentActivity() {
 
             var reachedPOI by remember { mutableStateOf<PointOfInterest?>(null) }
             var clickedPOI by remember { mutableStateOf<PointOfInterest?>(null) }
+
+            LaunchedEffect(reachedPOI) {
+                if (reachedPOI != null) {
+                    mapViewModel.stopLocationUpdates()
+                } else {
+                    mapViewModel.startLocationUpdates()
+                }
+            }
 
             MaterialTheme {
                 Surface(

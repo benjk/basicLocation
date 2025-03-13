@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.ui.theme.Typography
+import com.example.basiclocation.ui.theme.lightSecondaryColor
 import com.example.basiclocation.ui.theme.primaryColor
 import com.example.basiclocation.ui.theme.secondaryColor
 import com.example.basiclocation.ui.theme.thirdColor
@@ -128,7 +129,7 @@ fun PointOfInterestCardDetail(
                     onClick = onDismiss,
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = secondaryColor,
+                        containerColor = lightSecondaryColor,
                         contentColor = thirdColor
                     )
                 ) {

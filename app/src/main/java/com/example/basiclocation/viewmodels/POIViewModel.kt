@@ -19,7 +19,7 @@ class POIViewModel(
     private val poiRepository: PoiRepository
 ) : ViewModel() {
 
-    private val context = application;
+    private val context = application
 
     // Liste des POIs à afficher
     private val _poiList = MutableLiveData<List<PointOfInterest>>()
@@ -35,12 +35,13 @@ class POIViewModel(
         val pois = listOf(
             PointOfInterest(
                 id = "poi_0",
-                name = "Ma maison",
+                name = "Ma Maison",
                 description = "Un haut lieu de la tech du secteur audomarois",
                 latitude = 50.736942,
                 longitude = 2.251044,
                 triggerRadiusMeters = 15,
-                minTimeToTriggerSeconds = 6
+                minTimeToTriggerSeconds = 6,
+                imageName = "poi_moulin"
             ),
             PointOfInterest(
                 id = "poi_1",
@@ -108,7 +109,7 @@ class POIViewModel(
         _poiList.value = pois
         poiRepository.setPois(pois)
 
-        prechargeImages(pois);
+        prechargeImages(pois)
     }
 
     private fun prechargeImages(pois: List<PointOfInterest>) {
