@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -72,6 +73,8 @@ dependencies {
     // Mes Libs
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
+
 
     // OSMDroid
     implementation ("org.osmdroid:osmdroid-android:6.1.16")
