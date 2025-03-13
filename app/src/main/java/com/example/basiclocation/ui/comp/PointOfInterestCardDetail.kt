@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.basiclocation.model.PointOfInterest
+import com.example.basiclocation.ui.theme.Typography
 import com.example.basiclocation.ui.theme.primaryColor
 import com.example.basiclocation.ui.theme.secondaryColor
 import com.example.basiclocation.ui.theme.thirdColor
@@ -108,7 +109,7 @@ fun PointOfInterestCardDetail(
 
                 Text(
                     text = pointOfInterest.description,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = Typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
 
@@ -116,7 +117,7 @@ fun PointOfInterestCardDetail(
 
                 Text(
                     text = moreInfosText,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = Typography.bodySmall,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )
