@@ -1,7 +1,5 @@
 package com.example.basiclocation.ui.comp
 
-import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -50,10 +48,7 @@ fun InfoTab(
         Text(
             text = pointOfInterest.description,
             style = Typography.bodyLarge,
-            textAlign = TextAlign.Justify,
-                    modifier = Modifier.clickable {
-                        Log.d("PARDI", "PARDIIII")
-            }
+            textAlign = TextAlign.Justify
         )
 
         Spacer(modifier = Modifier.height(16.dp))

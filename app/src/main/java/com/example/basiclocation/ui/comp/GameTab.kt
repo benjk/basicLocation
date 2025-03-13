@@ -1,5 +1,7 @@
 package com.example.basiclocation.ui.comp
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +20,10 @@ fun GameTab(poiId: String) {
         Text(
             text = "Jeu pour POI $poiId",
             style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.clickable {
+                Log.d("PARDI", "PARDIIII")
+            }
         )
     }
 }

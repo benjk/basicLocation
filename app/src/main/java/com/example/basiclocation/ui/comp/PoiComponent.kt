@@ -1,6 +1,5 @@
 package com.example.basiclocation.ui.comp
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -24,11 +23,8 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +40,7 @@ import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.ui.theme.lightSecondaryColor
 import com.example.basiclocation.ui.theme.primaryColor
 import com.example.basiclocation.ui.theme.thirdColor
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,9 +49,7 @@ fun PoiComponent(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
-
-    // État pour gérer les onglets
-    var selectedTab by remember { mutableStateOf(0) }
+    val scope = rememberCoroutineScope()
 
     // Conversion du nom en ID de ressource
     val resourceId = remember(pointOfInterest.imageName) {
@@ -69,17 +64,6 @@ fun PoiComponent(
 
     // Configuration du pager
     val pagerState = rememberPagerState { 2 }
-
-    // Pour synchroniser l'onglet sélectionné avec le pager
-    LaunchedEffect(selectedTab) {
-        pagerState.animateScrollToPage(selectedTab)
-        Log.d("PARDI", "PLZ")
-    }
-
-    LaunchedEffect(pagerState.currentPage) {
-        selectedTab = pagerState.currentPage
-        Log.d("PARDI", "STOP")
-    }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -140,7 +124,7 @@ fun PoiComponent(
                 val textColor = thirdColor
 
                 TabRow(
-                    selectedTabIndex = selectedTab,
+                    selectedTabIndex = pagerState.currentPage,
                     containerColor = lightSecondaryColor,
                     contentColor = primaryColor,
                     modifier = Modifier
@@ -149,7 +133,10 @@ fun PoiComponent(
                         .clip(RoundedCornerShape(roundedCorner)),
                     indicator = { tabPositions ->
                         TabRowDefaults.Indicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab]).border(2.dp, lightSecondaryColor).padding(horizontal = 0.dp),
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                                .border(2.dp, lightSecondaryColor)
+                                .padding(horizontal = 0.dp),
                             height = indicatorHeight,
                             color = thirdColor
                         )
@@ -157,8 +144,12 @@ fun PoiComponent(
                 ) {
                     listOf("Infos", "Jeu").forEachIndexed { index, title ->
                         Tab(
-                            selected = selectedTab == index,
-                            onClick = { selectedTab = index },
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
                             modifier = Modifier.height(tabHeight),
                             text = {
                                 Text(
@@ -182,7 +173,11 @@ fun PoiComponent(
                         .weight(1f)
                 ) { page ->
                     when (page) {
-                        0 -> InfoTab(pointOfInterest) { selectedTab = 1 }
+                        0 -> InfoTab(pointOfInterest) {
+                            scope.launch {
+                                pagerState.animateScrollToPage(1)
+                            }
+                        }
                         1 -> GameTab(pointOfInterest.id)
                     }
                 }
