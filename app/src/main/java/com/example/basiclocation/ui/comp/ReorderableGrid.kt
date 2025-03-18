@@ -1,5 +1,6 @@
 package com.example.basiclocation.ui.comp
 
+import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -23,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -38,8 +41,11 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 @Composable
 fun ReorderableGrid(
     initialItems: List<DragItem>,
-    cellSize: Dp,
+    cellWidth: Dp,
+    cellHeight: Dp = cellWidth,
     nbCol: Int,
+    nbRow: Int,
+    itemSpacing: Dp = 4.dp,
     modifier: Modifier = Modifier
 ) {
     var items by remember { mutableStateOf(initialItems) }
@@ -58,16 +64,20 @@ fun ReorderableGrid(
     Box(
         modifier = Modifier
             .wrapContentSize()
-            .background(primaryColor)
+            .onSizeChanged {
+                Log.d("ZZZ", "ize height : " + it.height)
+            }
     ) {
-        val itemSpacing = 4.dp
-        val gridWidth = cellSize * nbCol + itemSpacing * (nbCol - 1);
+        val gridWidth = cellWidth * nbCol + itemSpacing * (nbCol - 1);
+        val gridHeight = cellHeight * nbRow + itemSpacing * (nbRow - 1)
+                Log.d("ZZZ", "AAAize height : " + gridHeight)
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(nbCol),
             modifier = Modifier
+                .height(gridHeight)
                 .width(gridWidth)
-                .background(secondaryColor),
+                .background(thirdColor),
             state = lazyGridState,
             contentPadding = PaddingValues(itemSpacing),
             verticalArrangement = Arrangement.spacedBy(itemSpacing),
@@ -80,7 +90,7 @@ fun ReorderableGrid(
                     Surface(
                         shadowElevation = elevation,
                         modifier = Modifier
-                            .size(cellSize)
+                            .size(cellWidth, cellHeight)
                             .draggableHandle(
                                 onDragStarted = {
                                     ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.GESTURE_START)
@@ -90,12 +100,16 @@ fun ReorderableGrid(
                                 },
                             )
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxSize().background(thirdColor),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text(item.title)
+                            // Afficher l'image si disponible, sinon le texte
+                            if (item.imageUri != null) {
+                                PuzzlePieceImage(imageUri = item.imageUri)
+                            } else {
+                                Text(item.title)
+                            }
                         }
                     }
                 }
