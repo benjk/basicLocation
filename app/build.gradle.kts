@@ -73,7 +73,7 @@ dependencies {
     // Mes Libs
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
+    implementation("sh.calvin.reorderable:reorderable:2.4.3")
 
 
     // OSMDroid

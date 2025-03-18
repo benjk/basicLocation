@@ -178,7 +178,7 @@ fun PoiComponent(
                                 pagerState.animateScrollToPage(1)
                             }
                         }
-                        1 -> GameTab(pointOfInterest.id)
+                        1 -> GameTab(context)
                     }
                 }
             }
