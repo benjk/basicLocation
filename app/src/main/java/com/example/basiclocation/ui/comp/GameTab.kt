@@ -2,9 +2,7 @@ package com.example.basiclocation.ui.comp
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.example.basiclocation.model.DragItem
 import com.example.basiclocation.viewmodels.PuzzleState
 import com.example.basiclocation.viewmodels.PuzzleViewModel
@@ -44,38 +41,44 @@ fun GameTab(viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
 
     val puzzleState by viewModel.puzzleState.collectAsState()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+    TabComponent(
+        title = "Remet les pièces dans l'ordre !",
+        buttonText = "CONTINUER",
+        onButtonClick = {},
+        buttonEnabled = isPuzzleSolved
     ) {
-        Spacer(modifier = Modifier.height(22.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            when (val state = puzzleState) {
+                is PuzzleState.Idle -> {
+                    // État initial, ne rien afficher
+                }
 
-        when (val state = puzzleState) {
-            is PuzzleState.Idle -> {
-                // État initial, ne rien afficher
+                is PuzzleState.Loading -> {
+                    CircularProgressIndicator()
+                }
+
+                is PuzzleState.Ready -> {
+                    PuzzleGrid(
+                        gridInfo = state.gridInfo,
+                    )
+                }
+
+                is PuzzleState.Error -> {
+                    Text(
+                        text = "Error: ${state.message}",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
 
-            is PuzzleState.Loading -> {
-                CircularProgressIndicator()
+            if (isPuzzleSolved) {
+                Log.d("ZZZ", "state ! " + puzzleState.toString())
             }
-
-            is PuzzleState.Ready -> {
-                PuzzleGrid(
-                    gridInfo = state.gridInfo,
-                )
-            }
-
-            is PuzzleState.Error -> {
-                Text(
-                    text = "Error: ${state.message}",
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-
-        if (isPuzzleSolved) {
-            Log.d("ZZZ", "state ! " + puzzleState.toString())
         }
     }
+
 }

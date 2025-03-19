@@ -35,14 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -66,7 +64,6 @@ fun PoiComponent(
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current.density
 
-
     // Conversion du nom en ID de ressource
     val resourceId = remember(pointOfInterest.imageName) {
         pointOfInterest.imageName?.let {
@@ -81,6 +78,7 @@ fun PoiComponent(
     // Configuration du pager
     val pagerState = rememberPagerState { 2 }
 
+    var contentSize by remember { mutableStateOf(Size.Zero) }
     var isPuzzleSolved by remember { mutableStateOf(false) }
 
     LaunchedEffect(viewModel) {
@@ -89,17 +87,16 @@ fun PoiComponent(
         }
     }
 
-    // Variables pour la taille dynamique
-    var infoTabSize by remember { mutableStateOf(Size(0f, 0f)) }
 
     // Déclenchement après la récupération de la taille de InfoTab
-    LaunchedEffect(infoTabSize) {
-        if (infoTabSize.width > 0 && infoTabSize.height > 0) {
-            if (viewModel.puzzleState.value !is PuzzleState.Ready) {
-                val widthDp = (infoTabSize.width / density).dp
-                val heightDp = (infoTabSize.height / density).dp
+    LaunchedEffect(contentSize) {
+        if (contentSize != Size.Zero) {
+            // Convertir la taille de px en dp
+            val widthDp = (contentSize.width / density).dp
+            val heightDp = (contentSize.height / density).dp
 
-                // On vérifie que l'état du puzzle est bien prêt avant de l'initialiser
+            if (viewModel.puzzleState.value !is PuzzleState.Ready) {
+                // Lancer la génération du puzzle
                 viewModel.initPuzzle(
                     context = context,
                     drawableResId = R.drawable.vitrail,
@@ -213,23 +210,24 @@ fun PoiComponent(
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(22.dp))
                 // Contenu des onglets avec HorizontalPager
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier
                         .weight(1f)
-                        .onGloballyPositioned { coordinates ->
-                            infoTabSize = coordinates.size.toSize()
-                        }
                 ) { page ->
                     when (page) {
-                        0 -> InfoTab(pointOfInterest) {
-                            scope.launch {
-                                pagerState.animateScrollToPage(1)
+                        0 -> InfoTab(
+                            pointOfInterest = pointOfInterest,
+                            onPlayClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(1)
+                                }
+                            },
+                            onContentSizeChange = { size ->
+                                contentSize = size
                             }
-                        }
+                        )
                         1 -> GameTab(viewModel, isPuzzleSolved)
                     }
                 }
