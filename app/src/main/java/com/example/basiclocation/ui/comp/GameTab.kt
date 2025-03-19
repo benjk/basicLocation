@@ -1,12 +1,16 @@
 package com.example.basiclocation.ui.comp
 
-import android.content.Context
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,11 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.example.basiclocation.R
 import com.example.basiclocation.model.DragItem
+import com.example.basiclocation.ui.theme.primaryColor
+import com.example.basiclocation.ui.theme.secondaryColor
+import com.example.basiclocation.viewmodels.PuzzleState
+import com.example.basiclocation.viewmodels.PuzzleViewModel
 
 @Composable
-fun GameTab(context: Context) {
+fun GameTab(viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
     var items by remember {
         mutableStateOf(
             listOf(
@@ -41,31 +48,53 @@ fun GameTab(context: Context) {
     }
 
     val density = LocalDensity.current
-    var availableWidth by remember { mutableStateOf(0.dp) }
-    var availableHeight by remember { mutableStateOf(0.dp) }
-    var isMeasured by remember { mutableStateOf(false) }
+    val puzzleState by viewModel.puzzleState.collectAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .onSizeChanged { size ->
-                availableWidth = with(density) { size.width.toDp() }
-                availableHeight = with(density) { size.height.toDp() }
-                isMeasured = true
-                Log.d("zzz", "availableWidth: $availableWidth, availableHeight: $availableHeight")
+                val availableWidth = with(density) { size.width.toDp() }
+                val availableHeight = with(density) { size.height.toDp() }
+                Log.d("ZZZ", "width : " + availableWidth)
+                Log.d("ZZZ", "width : " + availableHeight)
             },
         contentAlignment = Alignment.Center
     ) {
         Spacer(modifier = Modifier.height(22.dp))
 
-        // On affiche PuzzleGrid seulement si la taille a été mesurée
-        if (isMeasured) {
-            PuzzleGrid(
-                drawableResId = R.drawable.moulin,
-                availableWidth = availableWidth,
-                availableHeight = availableHeight,
-                itemSpacing = 2.dp,
-            )
+        when (val state = puzzleState) {
+            is PuzzleState.Idle -> {
+                // État initial, ne rien afficher
+            }
+            is PuzzleState.Loading -> {
+                CircularProgressIndicator()
+            }
+            is PuzzleState.Ready -> {
+                PuzzleGrid(
+                    gridInfo = state.gridInfo,
+                )
+            }
+            is PuzzleState.Error -> {
+                Text(
+                    text = "Error: ${state.message}",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+
+        if (isPuzzleSolved) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(secondaryColor),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "Félicitations !",
+                    color= primaryColor
+                )
+            }
         }
 
 //        ReorderableGrid(

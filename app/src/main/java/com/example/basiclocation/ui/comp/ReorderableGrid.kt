@@ -42,7 +42,8 @@ fun ReorderableGrid(
     cellHeight: Dp = cellWidth,
     nbCol: Int,
     nbRow: Int = (initialItems.size + nbCol - 1) / nbCol,
-    itemSpacing: Dp = 4.dp
+    itemSpacing: Dp = 4.dp,
+    onItemsReordered: (List<DragItem>) -> Unit = {}
 ) {
     var items by remember { mutableStateOf(initialItems) }
 
@@ -54,6 +55,7 @@ fun ReorderableGrid(
             this[from.index] = this[to.index]
             this[to.index] = temp
         }
+        onItemsReordered(items)
         ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK)
     }
 
@@ -108,5 +110,4 @@ fun ReorderableGrid(
             }
         }
     }
-
 }

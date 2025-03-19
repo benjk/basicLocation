@@ -11,15 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileInputStream
 
 @Composable
 fun PuzzlePieceImage(imageUri: String) {
-    val context = LocalContext.current
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
 
     LaunchedEffect(imageUri) {
