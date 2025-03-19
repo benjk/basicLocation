@@ -105,10 +105,11 @@ fun PoiComponent(
                     drawableResId = R.drawable.vitrail,
                     availableWidth = widthDp,
                     availableHeight = heightDp,
-                    itemSpacing = 2.dp
+                    itemSpacing = 2.dp,
+                    baseNbCol = 4
                 )
             } else {
-                Log.d("ZZZ", "Puzzle already initialized, skipping init.")
+                Log.d("ParentPoiComp", "Puzzle already initialized, skipping init.")
             }
         }
     }

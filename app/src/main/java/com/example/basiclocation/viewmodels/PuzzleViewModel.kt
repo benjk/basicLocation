@@ -48,7 +48,8 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
         baseNbCol: Int = 4
     ) {
         // Éviter de recalculer si les paramètres sont les mêmes
-        val newParams = InitParams(drawableResId, availableWidth, availableHeight, itemSpacing, baseNbCol)
+        val newParams =
+            InitParams(drawableResId, availableWidth, availableHeight, itemSpacing, baseNbCol)
         if (lastInitParams == newParams && puzzleState.value is PuzzleState.Ready) {
             return
         }
@@ -60,7 +61,14 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
             withContext(Dispatchers.IO) {
                 val bitmap = loadBitmap(context, drawableResId)
                 bitmap?.let {
-                    processPuzzle(context, it, availableWidth, availableHeight, itemSpacing, baseNbCol)
+                    processPuzzle(
+                        context,
+                        it,
+                        availableWidth,
+                        availableHeight,
+                        itemSpacing,
+                        baseNbCol
+                    )
                 } ?: run {
                     _puzzleState.value = PuzzleState.Error("Failed to load image")
                 }
@@ -124,12 +132,17 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
             else -> baseNbCol - 1  // Portrait
         }
 
-        // Calculer la taille de la grille
-        val (gridWidthPx, gridHeightPx) = if (imageRatio > 1) {
+        val widthRatio = availableWidthPx / bitmap.width.toFloat()
+        val heightRatio = availableHeightPx / bitmap.height.toFloat()
+
+        // Détermine quelle dimension est limitante
+        val (gridWidthPx, gridHeightPx) = if (widthRatio < heightRatio) {
+            // La largeur est limitante, on prend toute la largeur disponible
             val gridWidth = availableWidthPx
             val gridHeight = gridWidth / imageRatio
             gridWidth to gridHeight
         } else {
+            // La hauteur est limitante, on prend toute la hauteur disponible
             val gridHeight = availableHeightPx
             val gridWidth = gridHeight * imageRatio
             gridWidth to gridHeight
@@ -216,7 +229,8 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
                     height
                 )
 
-                val pieceUri = saveBitmapToTemporaryFile(context, pieceBitmap, "piece_${row}_${col}")
+                val pieceUri =
+                    saveBitmapToTemporaryFile(context, pieceBitmap, "piece_${row}_${col}")
 
                 pieces.add(
                     DragItem(
@@ -229,7 +243,7 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
             }
         }
 
-        return pieces.shuffled()
+        return pieces
     }
 
     private fun saveBitmapToTemporaryFile(context: Context, bitmap: Bitmap, name: String): String {
@@ -290,5 +304,6 @@ sealed class PuzzleState {
         val puzzlePieces: List<DragItem>,
         val gridInfo: GridInfo
     ) : PuzzleState()
+
     data class Error(val message: String) : PuzzleState()
 }
