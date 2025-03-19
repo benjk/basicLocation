@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import coil.Coil
 import coil.request.ImageRequest
 import com.example.basiclocation.helpers.PoiRepository
+import com.example.basiclocation.model.GameType
 import com.example.basiclocation.model.PointOfInterest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,12 +47,13 @@ class POIViewModel(
                     "Un peu d'histoire",
                     "Aujourd'hui"
                 ),
-                gameTitle = "Remets les pièces dans l'ordre !",
+                gameTitle = "Réponds aux questions !",
                 latitude = 50.736942,
                 longitude = 2.251044,
                 triggerRadiusMeters = 15,
                 minTimeToTriggerSeconds = 6,
-                imageName = "poi_cathedrale"
+                imageName = "poi_cathedrale",
+                gameType = GameType.QUIZ
             ),
             PointOfInterest(
                 id = "poi_1",
@@ -66,11 +68,13 @@ class POIViewModel(
                     "Un peu d'histoire",
                     "Aujourd'hui"
                 ),
+                gameTitle = "Réponds aux questions !",
                 latitude = 50.750067,
                 longitude = 2.251813,
                 triggerRadiusMeters = 25,
                 minTimeToTriggerSeconds = 10,
-                imageName = "poi_moulin"
+                imageName = "poi_moulin",
+                gameType = GameType.QUIZ
             ),
             PointOfInterest(
                 id = "poi_2",
@@ -90,7 +94,8 @@ class POIViewModel(
                 longitude = 2.252833,
                 triggerRadiusMeters = 70,
                 minTimeToTriggerSeconds = 8,
-                imageName = "poi_cathedrale"
+                imageName = "poi_cathedrale",
+                gameType = GameType.PUZZLE
             ),
             PointOfInterest(
                 id = "poi_3",

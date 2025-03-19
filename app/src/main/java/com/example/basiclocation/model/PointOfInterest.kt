@@ -15,7 +15,8 @@ data class PointOfInterest(
     val triggerRadiusMeters: Int = 50,
     val minTimeToTriggerSeconds: Int = 5,
     val imageName: String? = null,
-    var reached: Boolean = false
+    var reached: Boolean = false,
+    val gameType: GameType = GameType.QUIZ
 ) {
     fun getLatLng(): LatLng = LatLng(latitude, longitude)
 
@@ -26,4 +27,8 @@ data class PointOfInterest(
         }
         return poiLocation.distanceTo(userLocation) <= triggerRadiusMeters
     }
+}
+
+enum class GameType {
+    PUZZLE, QUIZ
 }

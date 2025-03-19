@@ -9,36 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.basiclocation.model.DragItem
 import com.example.basiclocation.viewmodels.PuzzleState
 import com.example.basiclocation.viewmodels.PuzzleViewModel
 
 @Composable
-fun GameTab(gameTitle : String, viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
-    var items by remember {
-        mutableStateOf(
-            listOf(
-                DragItem("Item 1", "Content 1"),
-                DragItem("Item 2", "Content 2"),
-                DragItem("Item 3", "Content 2"),
-                DragItem("Item 4", "Content 2"),
-                DragItem("Item 5", "Content 2"),
-                DragItem("Item 6", "Content 2"),
-                DragItem("Item 7", "Content 2"),
-                DragItem("Item 8", "Content 2"),
-                DragItem("Item 9", "Content 2"),
-                DragItem("Item 10", "Content 2"),
-                DragItem("Item 11", "Content 3"),
-                DragItem("Item 12", "Content 12")
-            )
-        )
-    }
-
+fun PuzzleTab(gameTitle : String, viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
     val puzzleState by viewModel.puzzleState.collectAsState()
 
     TabComponent(
