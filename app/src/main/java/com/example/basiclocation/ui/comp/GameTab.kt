@@ -65,8 +65,8 @@ fun GameTab(context: Context) {
             PuzzleGrid(
                 drawableResId = R.drawable.vitrail,
                 availableWidth = availableWidth,
-                availableHeight = availableHeight * 0.96f,  // ABRACADABRA LE BUG MYSTERIEUX DISPARAIT
-                itemSpacing = 2.dp
+                availableHeight = availableHeight,
+                itemSpacing = 4.dp
             )
         }
     }

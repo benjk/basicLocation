@@ -70,13 +70,13 @@ fun PuzzleGrid(
 
 
                 // 6. Calculer la taille des cellules pour remplir la grille
-                val cellWidthPx = (gridWidthPx - (nbCol - 1) * spacingPx) / nbCol
+                val cellWidthPx = (gridWidthPx - (nbCol + 1) * spacingPx) / nbCol
                 var cellHeightPx = cellWidthPx
                 // Calculer le nombre de lignes (nbRow) nécessaire pour que la grille occupe exactement gridHeightPx
                 val nbRow = ((gridHeightPx) / (cellHeightPx )).toInt()
 
                 // Recalculer la hauteur des cellules pour que la multiplication par nbRow donne exactement gridHeightPx
-                cellHeightPx = gridHeightPx / nbRow
+                cellHeightPx = (gridHeightPx - ((nbRow + 1) * spacingPx)) / nbRow
 
                 // 4. Créer les pièces du puzzle
                 puzzlePieces.value = splitImageIntoPuzzlePieces(
@@ -85,7 +85,8 @@ fun PuzzleGrid(
                     nbCol,
                     nbRow,
                     cellWidthPx,
-                    cellHeightPx
+                    cellHeightPx,
+                    spacingPx
                 )
 
                 // 5. Stocker les informations de la grille
@@ -117,16 +118,21 @@ private suspend fun splitImageIntoPuzzlePieces(
     nbCol: Int,
     nbRow: Int,
     cellWidthPx: Float,
-    cellHeightPx: Float
+    cellHeightPx: Float,
+    spacingPx: Float
 ): List<DragItem> {
     val pieces = mutableListOf<DragItem>()
 
     // 1. Redimensionner le bitmap pour qu'il tienne dans la grille calculée
-    Log.d("ZZZ", "ZA " + cellHeightPx.toInt() * nbRow)
+    val bitmapHeight = cellHeightPx * nbRow
+    val bitmapWidth = cellWidthPx * nbCol;
+    Log.d("ZZZ", "ZA SPACE " + spacingPx)
+    Log.d("ZZZ", "ZA " + bitmapHeight)
+    Log.d("ZZZ", "ZAINT " + bitmapHeight.toInt())
     val resizedBitmap = Bitmap.createScaledBitmap(
         bitmap,
-        cellWidthPx.toInt() * nbCol,
-        cellHeightPx.toInt() * nbRow,
+        bitmapWidth.toInt(),
+        bitmapHeight.toInt(),
         true
     )
 
@@ -163,7 +169,7 @@ private suspend fun splitImageIntoPuzzlePieces(
         }
     }
 
-    return pieces.shuffled();
+    return pieces
 }
 
 

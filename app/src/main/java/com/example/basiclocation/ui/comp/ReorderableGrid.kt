@@ -1,12 +1,10 @@
 package com.example.basiclocation.ui.comp
 
-import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -25,15 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import com.example.basiclocation.model.DragItem
-import com.example.basiclocation.ui.theme.primaryColor
-import com.example.basiclocation.ui.theme.secondaryColor
 import com.example.basiclocation.ui.theme.thirdColor
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
@@ -64,13 +59,9 @@ fun ReorderableGrid(
     Box(
         modifier = Modifier
             .wrapContentSize()
-            .onSizeChanged {
-                Log.d("ZZZ", "ize height : " + it.height)
-            }
     ) {
-        val gridWidth = cellWidth * nbCol + itemSpacing * (nbCol - 1);
-        val gridHeight = cellHeight * nbRow + itemSpacing * (nbRow - 1)
-                Log.d("ZZZ", "AAAize height : " + gridHeight)
+        val gridWidth = cellWidth * nbCol + itemSpacing * (nbCol + 1);
+        val gridHeight = cellHeight * nbRow + itemSpacing * (nbRow + 1)
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(nbCol),
