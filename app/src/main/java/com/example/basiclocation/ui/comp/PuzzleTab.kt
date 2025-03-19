@@ -15,13 +15,22 @@ import com.example.basiclocation.viewmodels.PuzzleState
 import com.example.basiclocation.viewmodels.PuzzleViewModel
 
 @Composable
-fun PuzzleTab(gameTitle : String, viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
+fun PuzzleTab(
+    gameTitle: String,
+    viewModel: PuzzleViewModel,
+    isPuzzleSolved: Boolean,
+    onClose: () -> Unit
+) {
     val puzzleState by viewModel.puzzleState.collectAsState()
 
     TabComponent(
         title = gameTitle,
         buttonText = "CONTINUER",
-        onButtonClick = {},
+        onButtonClick = {
+            if (isPuzzleSolved) {
+                onClose()
+            }
+        },
         buttonEnabled = isPuzzleSolved
     ) {
         Box(

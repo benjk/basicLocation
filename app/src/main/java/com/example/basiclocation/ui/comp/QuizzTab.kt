@@ -8,11 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun QuizzTab(gameTitle : String) {
+fun QuizzTab(gameTitle : String, onClose: () -> Unit) {
     TabComponent(
         title = gameTitle,
         buttonText = "CONTINUER",
-        onButtonClick = {},
+        onButtonClick = {onClose()},
     ) {
         Box(
             modifier = Modifier

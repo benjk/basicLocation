@@ -245,7 +245,7 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
             }
         }
 
-        return pieces
+        return pieces.shuffled()
     }
 
     private fun saveBitmapToTemporaryFile(context: Context, bitmap: Bitmap, name: String): String {

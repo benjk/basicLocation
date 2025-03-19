@@ -215,9 +215,17 @@ fun PoiComponent(
                                 contentSize = size
                             }
                         )
+
                         1 -> when (pointOfInterest.gameType) {
-                            GameType.PUZZLE -> PuzzleTab(pointOfInterest.gameTitle, viewModel, isPuzzleSolved)
-                            GameType.QUIZ -> QuizzTab(pointOfInterest.gameTitle)
+                            GameType.PUZZLE -> PuzzleTab(
+                                pointOfInterest.gameTitle,
+                                viewModel,
+                                isPuzzleSolved,
+                                onClose = { onDismiss() })
+
+                            GameType.QUIZ -> QuizzTab(
+                                pointOfInterest.gameTitle,
+                                onClose = { onDismiss() })
                         }
                     }
                 }
