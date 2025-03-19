@@ -34,14 +34,15 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
+// nbRow et cellHeight sont optionnels et peuvent etre calculés à partir des autres DATAS
 fun ReorderableGrid(
+    modifier: Modifier = Modifier,
     initialItems: List<DragItem>,
     cellWidth: Dp,
     cellHeight: Dp = cellWidth,
     nbCol: Int,
-    nbRow: Int,
-    itemSpacing: Dp = 4.dp,
-    modifier: Modifier = Modifier
+    nbRow: Int = (initialItems.size + nbCol - 1) / nbCol,
+    itemSpacing: Dp = 4.dp
 ) {
     var items by remember { mutableStateOf(initialItems) }
 
@@ -60,7 +61,7 @@ fun ReorderableGrid(
         modifier = Modifier
             .wrapContentSize()
     ) {
-        val gridWidth = cellWidth * nbCol + itemSpacing * (nbCol + 1);
+        val gridWidth = cellWidth * nbCol + itemSpacing * (nbCol + 1)
         val gridHeight = cellHeight * nbRow + itemSpacing * (nbRow + 1)
 
         LazyVerticalGrid(

@@ -2,7 +2,6 @@ package com.example.basiclocation.ui.comp
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.example.basiclocation.R
 import com.example.basiclocation.model.DragItem
-import com.example.basiclocation.ui.theme.secondaryColor
 
 @Composable
 fun GameTab(context: Context) {
@@ -63,11 +61,20 @@ fun GameTab(context: Context) {
         // On affiche PuzzleGrid seulement si la taille a été mesurée
         if (isMeasured) {
             PuzzleGrid(
-                drawableResId = R.drawable.vitrail,
+                drawableResId = R.drawable.moulin,
                 availableWidth = availableWidth,
                 availableHeight = availableHeight,
-                itemSpacing = 4.dp
+                itemSpacing = 2.dp,
             )
         }
+
+//        ReorderableGrid(
+//            initialItems = items,
+//            cellWidth = 80.dp,
+//            cellHeight = 80.dp,
+//            nbCol = 3,
+//            nbRow = 4,
+//            itemSpacing = 4.dp
+//        )
     }
 }

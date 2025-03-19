@@ -22,11 +22,12 @@ import java.io.IOException
 
 @Composable
 fun PuzzleGrid(
+    modifier: Modifier = Modifier,
     drawableResId: Int,
     availableWidth: Dp,
     availableHeight: Dp,
     itemSpacing: Dp = 4.dp,
-    modifier: Modifier = Modifier
+    baseNbCol: Int = 4
 ) {
     val context = LocalContext.current
     val puzzlePieces = remember { mutableStateOf<List<DragItem>>(emptyList()) }
@@ -47,8 +48,8 @@ fun PuzzleGrid(
                 // 4. Déterminer le nombre de colonnes en fonction de l'orientation de l'image
                 val imageRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
                 val nbCol = when {
-                    imageRatio > 1 -> 5  // Paysage
-                    else -> 3  // Portrait
+                    imageRatio > 1 -> baseNbCol + 1  // Paysage
+                    else -> baseNbCol - 1  // Portrait
                 }
 
                 // 5. Calculer la largeur et la hauteur de la grille en fonction du ratio de l'image
@@ -112,7 +113,7 @@ fun PuzzleGrid(
     }
 }
 
-private suspend fun splitImageIntoPuzzlePieces(
+private fun splitImageIntoPuzzlePieces(
     context: Context,
     bitmap: Bitmap,
     nbCol: Int,
@@ -125,7 +126,7 @@ private suspend fun splitImageIntoPuzzlePieces(
 
     // 1. Redimensionner le bitmap pour qu'il tienne dans la grille calculée
     val bitmapHeight = cellHeightPx * nbRow
-    val bitmapWidth = cellWidthPx * nbCol;
+    val bitmapWidth = cellWidthPx * nbCol
     Log.d("ZZZ", "ZA SPACE " + spacingPx)
     Log.d("ZZZ", "ZA " + bitmapHeight)
     Log.d("ZZZ", "ZAINT " + bitmapHeight.toInt())
@@ -169,7 +170,7 @@ private suspend fun splitImageIntoPuzzlePieces(
         }
     }
 
-    return pieces
+    return pieces.shuffled()
 }
 
 
