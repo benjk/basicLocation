@@ -12,11 +12,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.basiclocation.model.DragItem
 import com.example.basiclocation.model.Position
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,12 +28,17 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
     private val _puzzleState = MutableStateFlow<PuzzleState>(PuzzleState.Idle)
     val puzzleState: StateFlow<PuzzleState> = _puzzleState.asStateFlow()
 
-    // Signal pour indiquer que le puzzle est résolu
-    private val _puzzleSolved = MutableSharedFlow<Boolean>()
-    val puzzleSolved: SharedFlow<Boolean> = _puzzleSolved.asSharedFlow()
+    private val _puzzleSolved = MutableStateFlow(false) // Valeur initiale false
+    val puzzleSolved: StateFlow<Boolean> = _puzzleSolved.asStateFlow()
 
     // Cache pour stocker les dimensions de la dernière initialisation
     private var lastInitParams: InitParams? = null
+
+    init {
+        viewModelScope.launch {
+            _puzzleSolved.emit(false)
+        }
+    }
 
     // Initialiser le puzzle
     fun initPuzzle(
@@ -102,9 +104,9 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
             _puzzleState.value = updatedState
 
             if (checkPuzzleSolved()) {
-                viewModelScope.launch {
-                    _puzzleSolved.emit(true)
-                }
+                _puzzleSolved.value = true
+            } else {
+                _puzzleSolved.value = false
             }
         }
     }

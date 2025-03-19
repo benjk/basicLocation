@@ -1,7 +1,6 @@
 package com.example.basiclocation.ui.comp
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +23,7 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,14 +77,7 @@ fun PoiComponent(
     val pagerState = rememberPagerState { 2 }
 
     var contentSize by remember { mutableStateOf(Size.Zero) }
-    var isPuzzleSolved by remember { mutableStateOf(false) }
-
-    LaunchedEffect(viewModel) {
-        viewModel.puzzleSolved.collect { solved ->
-            isPuzzleSolved = solved
-        }
-    }
-
+    val isPuzzleSolved by viewModel.puzzleSolved.collectAsState(initial = false)
 
     // Déclenchement après la récupération de la taille de InfoTab
     LaunchedEffect(contentSize) {
@@ -101,7 +94,7 @@ fun PoiComponent(
                     availableWidth = widthDp,
                     availableHeight = heightDp,
                     itemSpacing = 2.dp,
-                    baseNbCol = 4
+                    baseNbCol = 3
                 )
             } else {
                 Log.d("ParentPoiComp", "Puzzle already initialized, skipping init.")
