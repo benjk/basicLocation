@@ -33,13 +33,15 @@ fun TabComponent(
     onContentSizeChange: (Size) -> Unit = {},
     content: @Composable () -> Unit
 ) {
+    val spacing = 16.dp
+
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         // Titre en haut
         Text(
             text = title,
             textAlign = TextAlign.Center,
-            style = Typography.headlineSmall,
-            modifier = Modifier.padding(8.dp).fillMaxWidth()
+            style = Typography.headlineLarge,
+            modifier = Modifier.padding(vertical = spacing).fillMaxWidth()
         )
 
         Box(
@@ -53,7 +55,7 @@ fun TabComponent(
             content()
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(spacing))
 
         // Bouton en bas
         Button(

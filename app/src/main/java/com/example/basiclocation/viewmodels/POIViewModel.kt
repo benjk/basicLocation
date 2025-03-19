@@ -37,19 +37,38 @@ class POIViewModel(
                 id = "poi_0",
                 name = "Ma Maison",
                 description = "Un haut lieu de la tech du secteur audomarois",
+                texts = listOf(
+                    "La Grand-Place de Saint-Omer est un lieu où l’histoire et la modernité se rencontrent harmonieusement. Cœur battant de la ville, cette place est un véritable symbole du dynamisme de Saint-Omer, mêlant patrimoine et vie contemporaine.",
+                    "Le bâtiment emblématique de la place, surnommé le \"moulin à café\", est un vestige industriel qui a marqué l’histoire de la ville. Construit au XIXe siècle, il représente l’architecture typique de l’époque, avec sa silhouette distinctive qui rappelle un moulin à vent. Ce bâtiment a joué un rôle majeur dans l’activité commerciale et industrielle locale, et aujourd’hui, il reste un témoin du passé de Saint-Omer.",
+                    "Aujourd’hui, la Grand-Place est un espace animé et vivant, avec des bars, des terrasses et des restaurants qui attirent les habitants et les visiteurs. L'un des points phares de cette place est le théâtre \"La Barcarolle\", un lieu culturel incontournable de l'audomarois."
+                ),
+                titles = listOf(
+                    "Un peu d'histoire",
+                    "Aujourd'hui"
+                ),
+                gameTitle = "Remets les pièces dans l'ordre !",
                 latitude = 50.736942,
                 longitude = 2.251044,
                 triggerRadiusMeters = 15,
                 minTimeToTriggerSeconds = 6,
-                imageName = "poi_moulin"
+                imageName = "poi_cathedrale"
             ),
             PointOfInterest(
                 id = "poi_1",
                 name = "La Grand-Place",
-                description = "Le centre de névralgique de la cité audomaroise, on y retrouve le fameux Moulin à café, ancien hHôtel de ville aujourd'hui devenu un théâtre.",
+                description = "Le centre de névralgique de la cité audomaroise, on y retrouve le fameux Moulin à café, ancien Hôtel de ville aujourd'hui devenu un théâtre.",
+                texts = listOf(
+                    "La Grand-Place de Saint-Omer est un lieu où l’histoire et la modernité se rencontrent harmonieusement. Cœur battant de la ville, cette place est un véritable symbole du dynamisme de Saint-Omer, mêlant patrimoine et vie contemporaine.",
+                    "Le bâtiment emblématique de la place, surnommé le \"moulin à café\", est un vestige industriel qui a marqué l’histoire de la ville. Construit au XIXe siècle, il représente l’architecture typique de l’époque, avec sa silhouette distinctive qui rappelle un moulin à vent. Ce bâtiment a joué un rôle majeur dans l’activité commerciale et industrielle locale, et aujourd’hui, il reste un témoin du passé de Saint-Omer.",
+                    "Aujourd’hui, la Grand-Place est un espace animé et vivant, avec des bars, des terrasses et des restaurants qui attirent les habitants et les visiteurs. L'un des points phares de cette place est le théâtre \"La Barcarolle\", un lieu culturel incontournable de l'audomarois."
+                ),
+                titles = listOf(
+                    "Un peu d'histoire",
+                    "Aujourd'hui"
+                ),
                 latitude = 50.750067,
                 longitude = 2.251813,
-                triggerRadiusMeters = 5,
+                triggerRadiusMeters = 25,
                 minTimeToTriggerSeconds = 10,
                 imageName = "poi_moulin"
             ),
@@ -57,9 +76,19 @@ class POIViewModel(
                 id = "poi_2",
                 name = "La Cathédrale",
                 description = "Notre-Dame de Saint-Omer est une église catholique datant de 1879.",
+                texts = listOf(
+                    "La Grand-Place de Saint-Omer est un lieu où l’histoire et la modernité se rencontrent harmonieusement. Cœur battant de la ville, cette place est un véritable symbole du dynamisme de Saint-Omer, mêlant patrimoine et vie contemporaine.",
+                    "Le bâtiment emblématique de la place, surnommé le \"moulin à café\", est un vestige industriel qui a marqué l’histoire de la ville. Construit au XIXe siècle, il représente l’architecture typique de l’époque, avec sa silhouette distinctive qui rappelle un moulin à vent. Ce bâtiment a joué un rôle majeur dans l’activité commerciale et industrielle locale, et aujourd’hui, il reste un témoin du passé de Saint-Omer.",
+                    "Aujourd’hui, la Grand-Place est un espace animé et vivant, avec des bars, des terrasses et des restaurants qui attirent les habitants et les visiteurs. L'un des points phares de cette place est le théâtre \"La Barcarolle\", un lieu culturel incontournable de l'audomarois."
+                ),
+                titles = listOf(
+                    "Un peu d'histoire",
+                    "Aujourd'hui"
+                ),
+                gameTitle = "Remets les pièces dans l'ordre !",
                 latitude = 50.747345,
                 longitude = 2.252833,
-                triggerRadiusMeters = 40,
+                triggerRadiusMeters = 70,
                 minTimeToTriggerSeconds = 8,
                 imageName = "poi_cathedrale"
             ),

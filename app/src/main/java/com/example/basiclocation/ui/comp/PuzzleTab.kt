@@ -19,7 +19,7 @@ import com.example.basiclocation.viewmodels.PuzzleState
 import com.example.basiclocation.viewmodels.PuzzleViewModel
 
 @Composable
-fun GameTab(viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
+fun GameTab(gameTitle : String, viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
     var items by remember {
         mutableStateOf(
             listOf(
@@ -42,7 +42,7 @@ fun GameTab(viewModel: PuzzleViewModel, isPuzzleSolved: Boolean) {
     val puzzleState by viewModel.puzzleState.collectAsState()
 
     TabComponent(
-        title = "Remet les pièces dans l'ordre !",
+        title = gameTitle,
         buttonText = "CONTINUER",
         onButtonClick = {},
         buttonEnabled = isPuzzleSolved

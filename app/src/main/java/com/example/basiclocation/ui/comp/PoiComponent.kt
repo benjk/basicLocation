@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -153,15 +152,6 @@ fun PoiComponent(
                     Spacer(modifier = Modifier.height(14.dp))
                 }
 
-                Text(
-                    text = pointOfInterest.name,
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
                 // TabRow pour les onglets
                 val tabHeight = 36.dp
                 val indicatorHeight = 6.dp
@@ -228,7 +218,7 @@ fun PoiComponent(
                                 contentSize = size
                             }
                         )
-                        1 -> GameTab(viewModel, isPuzzleSolved)
+                        1 -> GameTab(pointOfInterest.gameTitle, viewModel, isPuzzleSolved)
                     }
                 }
             }
