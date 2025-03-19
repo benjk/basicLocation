@@ -64,8 +64,8 @@ fun PointOfInterestCardDetail(
             elevation = CardDefaults.cardElevation(8.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = thirdColor,
-                contentColor = primaryColor
+                containerColor = primaryColor,
+                contentColor = thirdColor
             )
         ) {
             Column(

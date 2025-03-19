@@ -3,7 +3,6 @@ package com.example.basiclocation.ui.comp
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -127,8 +126,8 @@ fun PoiComponent(
             elevation = CardDefaults.cardElevation(8.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = thirdColor,
-                contentColor = primaryColor
+                containerColor = primaryColor,
+                contentColor = thirdColor
             )
         ) {
             Column(
@@ -154,7 +153,7 @@ fun PoiComponent(
 
                 // TabRow pour les onglets
                 val tabHeight = 36.dp
-                val indicatorHeight = 6.dp
+                val indicatorHeight = 3.dp
                 val unselectedAlpha = 0.6f
                 val roundedCorner = 8.dp
                 val textColor = thirdColor
@@ -162,7 +161,6 @@ fun PoiComponent(
                 TabRow(
                     selectedTabIndex = pagerState.currentPage,
                     containerColor = lightSecondaryColor,
-                    contentColor = primaryColor,
                     modifier = Modifier
                         .fillMaxWidth()
                         .requiredHeight(tabHeight)
@@ -171,7 +169,6 @@ fun PoiComponent(
                         TabRowDefaults.Indicator(
                             modifier = Modifier
                                 .tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                                .border(2.dp, lightSecondaryColor)
                                 .padding(horizontal = 0.dp),
                             height = indicatorHeight,
                             color = thirdColor

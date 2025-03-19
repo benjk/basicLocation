@@ -91,16 +91,18 @@ fun InfoTab(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(40.dp)
+                            .height(25.dp)
                             .background(
                                 Brush.verticalGradient(
                                     colors = listOf(
-                                        Color.Transparent,
-                                        thirdColor.copy(alpha = 0.5f),
-                                        thirdColor.copy(alpha = 0.9f),
+                                        primaryColor.copy(alpha = 0.02f),
+                                        primaryColor.copy(alpha = 0.08f),
+                                        primaryColor.copy(alpha = 0.4f),
+                                        primaryColor.copy(alpha = 0.6f),
+                                        primaryColor.copy(alpha = 0.8f),
                                     ),
                                     startY = 0f,
-                                    endY = 40f
+                                    endY = 25f
                                 )
                             )
                     )
@@ -108,7 +110,7 @@ fun InfoTab(
                     // Ligne indicatrice en dessous du dégradé
                     Box(
                         modifier = Modifier
-                            .padding(top = 36.dp)
+                            .padding(top = 20.dp)
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth()
                             .height(2.dp)
@@ -117,8 +119,8 @@ fun InfoTab(
                                 Brush.horizontalGradient(
                                     colors = listOf(
                                         Color.Transparent,
-                                        primaryColor.copy(alpha = 0.3f),
-                                        primaryColor.copy(alpha = 0.3f),
+                                        thirdColor.copy(alpha = 0.3f),
+                                        thirdColor.copy(alpha = 0.3f),
                                         Color.Transparent
                                     )
                                 )
