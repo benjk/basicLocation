@@ -155,30 +155,32 @@ class PuzzleViewModel(application: Application) : AndroidViewModel(application) 
         val nbRow = ((gridHeightPx) / (cellHeightPx)).toInt()
         cellHeightPx = (gridHeightPx - ((nbRow + 1) * spacingPx)) / nbRow
 
-        // Créer les pièces du puzzle
-        val puzzlePieces = splitImageIntoPuzzlePieces(
-            context,
-            bitmap,
-            nbCol,
-            nbRow,
-            cellWidthPx,
-            cellHeightPx
-        )
-
-        // Convertir les px en dp pour les composants Compose
-        val cellWidthDp = cellWidthPx / density
-        val cellHeightDp = cellHeightPx / density
-
-        // Mettre à jour l'état
-        _puzzleState.value = PuzzleState.Ready(
-            puzzlePieces = puzzlePieces,
-            gridInfo = GridInfo(
-                nbCol = nbCol,
-                nbRow = nbRow,
-                cellWidth = cellWidthDp.dp,
-                cellHeight = cellHeightDp.dp
+        if (cellHeightPx > 0 && cellWidthPx > 0) {
+            // Créer les pièces du puzzle
+            val puzzlePieces = splitImageIntoPuzzlePieces(
+                context,
+                bitmap,
+                nbCol,
+                nbRow,
+                cellWidthPx,
+                cellHeightPx
             )
-        )
+
+            // Convertir les px en dp pour les composants Compose
+            val cellWidthDp = cellWidthPx / density
+            val cellHeightDp = cellHeightPx / density
+
+            // Mettre à jour l'état
+            _puzzleState.value = PuzzleState.Ready(
+                puzzlePieces = puzzlePieces,
+                gridInfo = GridInfo(
+                    nbCol = nbCol,
+                    nbRow = nbRow,
+                    cellWidth = cellWidthDp.dp,
+                    cellHeight = cellHeightDp.dp
+                )
+            )
+        }
     }
 
     // Méthodes auxiliaires pour le traitement de l'image

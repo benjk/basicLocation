@@ -43,6 +43,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.basiclocation.R
+import com.example.basiclocation.model.GameType
 import com.example.basiclocation.model.PointOfInterest
 import com.example.basiclocation.ui.theme.lightSecondaryColor
 import com.example.basiclocation.ui.theme.primaryColor
@@ -51,7 +52,6 @@ import com.example.basiclocation.viewmodels.PuzzleState
 import com.example.basiclocation.viewmodels.PuzzleViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PoiComponent(
     pointOfInterest: PointOfInterest,
@@ -120,7 +120,7 @@ fun PoiComponent(
             .fillMaxHeight()
         Card(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.95f)
                 .fillMaxHeight()
                 .padding(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
@@ -215,7 +215,10 @@ fun PoiComponent(
                                 contentSize = size
                             }
                         )
-                        1 -> GameTab(pointOfInterest.gameTitle, viewModel, isPuzzleSolved)
+                        1 -> when (pointOfInterest.gameType) {
+                            GameType.PUZZLE -> PuzzleTab(pointOfInterest.gameTitle, viewModel, isPuzzleSolved)
+                            GameType.QUIZ -> QuizzTab(pointOfInterest.gameTitle)
+                        }
                     }
                 }
             }

@@ -1,10 +1,11 @@
 package com.example.basiclocation
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +18,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.basiclocation.helpers.GooglePlayServicesHelper
 import com.example.basiclocation.helpers.LocationHelper
@@ -102,11 +106,13 @@ class MapActivity : ComponentActivity() {
 
                     // Show POI Infos on click
                     reachedPOI?.let { poi ->
+                        locationHelper.stopLocationUpdates()
                         PoiComponent(
                             pointOfInterest = poi,
                             onDismiss = {
                                 reachedPOI = null
                                 mapViewModel.clearNearbyPointOfInterest()
+                                locationHelper.startLocationUpdates()
                             }
                         )
                     }
@@ -161,11 +167,24 @@ class MapActivity : ComponentActivity() {
     }
 
     private fun enableFullScreenMode() {
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            // Cache complètement la status bar
+            hide(WindowInsetsCompat.Type.statusBars())
+
+            // Garde la navigation bar visible mais transparente
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        window.apply {
+            // Enlève la couleur noire immonde de la status bar
+            statusBarColor = Color.TRANSPARENT
+            // Navigation bar visible mais transparente
+            navigationBarColor = Color.TRANSPARENT
+            // Rend le fond derrière la status bar immersive
+            addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        }
     }
+
 }
