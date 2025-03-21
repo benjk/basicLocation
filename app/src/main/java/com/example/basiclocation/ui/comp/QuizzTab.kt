@@ -1,6 +1,5 @@
 package com.example.basiclocation.ui.comp
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -50,12 +49,12 @@ fun QuizzTab(
     val currentQuestionIndex by remember { quizViewModel.currentQuestionIndex }
     val currentQuestion = quizViewModel.getCurrentQuestion()
     val selectedAnswerIndex = quizViewModel.getSelectedAnswer()
-    val isLastQuestion = quizViewModel.isLastQuestion()
     val totalQuestions = quizViewModel.getQuestionCount()
 
     // BUTTON
-    val buttonText = if (isLastQuestion) "ENVOYER LE QUIZ" else "QUESTION SUIVANTE"
-    val buttonEnabled = quizViewModel.getSelectedAnswer() != -1
+    val buttonText = "CONTINUER"
+    val buttonEnabled = (quizViewModel.isLastQuestion() && quizViewModel.allQuestionsAnswered()) ||
+            (!quizViewModel.isLastQuestion() && quizViewModel.getSelectedAnswer() != -1)
 
     // Swipe utils
     var isSwipingEnabled by remember { mutableStateOf(true) }
@@ -91,9 +90,9 @@ fun QuizzTab(
         title = gameTitle,
         buttonText = buttonText,
         onButtonClick = {
-            if (isLastQuestion) {
-                // Envoyer le quiz
+            if (quizViewModel.isLastQuestion()) {
                 val score = quizViewModel.calculateScore()
+                onClose()
                 onQuizCompleted(score, totalQuestions)
             } else {
                 handleSwipe(true)
@@ -108,16 +107,13 @@ fun QuizzTab(
                     detectDragGestures(
                         onDragStart = { startPoint ->
                             dragStartX = startPoint.x
-                            Log.d("ZZZ", "gesture started")
                         },
                         onDragEnd = {
                             val dragDistance = abs(dragCurrentX - dragStartX)
                             if (isSwipingEnabled && dragDistance > dragThreshold) {
-                                if (dragCurrentX < dragStartX && !isLastQuestion) {
-                                    Log.d("ZZZ", "swipe gauche")
+                                if (dragCurrentX < dragStartX && !quizViewModel.isLastQuestion()) {
                                     handleSwipe(true)
                                 } else if (dragCurrentX > dragStartX && currentQuestionIndex > 0) {
-                                    Log.d("ZZZ", "swipe droite")
                                     handleSwipe(false)
                                 }
                             }
