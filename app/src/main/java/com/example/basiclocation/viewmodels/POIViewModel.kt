@@ -53,7 +53,7 @@ class POIViewModel(
                 triggerRadiusMeters = 15,
                 minTimeToTriggerSeconds = 6,
                 imageName = "poi_cathedrale",
-                gameType = GameType.PUZZLE
+                gameType = GameType.QUIZ
             ),
             PointOfInterest(
                 id = "poi_1",
