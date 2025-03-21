@@ -1,5 +1,6 @@
 package com.example.basiclocation.ui.comp
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -15,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,30 +41,51 @@ fun QuizzTab(
     onQuizCompleted: (Int, Int) -> Unit = { _, _ -> }
 ) {
     val quizViewModel: QuizViewModel = viewModel()
-    var isSwipingEnabled by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
+    // Définir la durée d'animation
+    val questionTransitionDuration = 150
 
-    // Pour gérer le drag
-    var dragStartX by remember { mutableStateOf(0f) }
-    val dragThreshold = 100f  // Seuil pour considérer qu'un swipe a eu lieu
-
-    val currentQuestionIndex = quizViewModel.currentQuestionIndex.value
-    val selectedAnswers by remember { mutableStateOf(quizViewModel.selectedAnswers) }
+    // Questions DATA
+    val currentQuestionIndex by remember { quizViewModel.currentQuestionIndex }
     val currentQuestion = quizViewModel.getCurrentQuestion()
     val selectedAnswerIndex = quizViewModel.getSelectedAnswer()
-
-    // Si l'on veut observer le changement dans la question actuelle
     val isLastQuestion = quizViewModel.isLastQuestion()
     val totalQuestions = quizViewModel.getQuestionCount()
 
-    // Définir les textes pour le bouton
+    // BUTTON
     val buttonText = if (isLastQuestion) "ENVOYER LE QUIZ" else "QUESTION SUIVANTE"
     val buttonEnabled = quizViewModel.getSelectedAnswer() != -1
 
+    // Swipe utils
+    var isSwipingEnabled by remember { mutableStateOf(true) }
+    // drag
+    var dragStartX by remember { mutableFloatStateOf(0f) }
+    var dragCurrentX by remember { mutableFloatStateOf(0f) }
+    val dragThreshold = 100f  // Seuil pour considérer qu'un swipe a eu lieu
     // Pour l'animation entre les questions
     var isQuestionVisible by remember { mutableStateOf(true) }
-    var slideDirection by remember { mutableStateOf(1) } // 1 pour droite->gauche, -1 pour gauche->droite
+    var slideDirection by remember { mutableIntStateOf(1) }
+
+    fun handleSwipe(isSwipeLeft: Boolean) {
+        // Hide question and disable swipe while animation runs
+        isQuestionVisible = false
+        slideDirection = if (isSwipeLeft) 1 else -1
+        isSwipingEnabled = false
+
+        // Coroutine pour gérer l'animation et la mise à jour de la question
+        coroutineScope.launch {
+            kotlinx.coroutines.delay(questionTransitionDuration.toLong())
+            if (isSwipeLeft) {
+                quizViewModel.goToNextQuestion()
+            } else {
+                quizViewModel.goToPreviousQuestion()
+            }
+            kotlinx.coroutines.delay(100)
+            isQuestionVisible = true
+            isSwipingEnabled = true
+        }
+    }
 
     TabComponent(
         title = gameTitle,
@@ -72,19 +96,7 @@ fun QuizzTab(
                 val score = quizViewModel.calculateScore()
                 onQuizCompleted(score, totalQuestions)
             } else {
-                // Passer à la question suivante avec animation
-                isQuestionVisible = false
-                slideDirection = 1
-                isSwipingEnabled = false
-
-                // Attendre que l'animation soit terminée avant de changer la question
-                coroutineScope.launch {
-                    kotlinx.coroutines.delay(300)
-                    quizViewModel.goToNextQuestion()
-                    kotlinx.coroutines.delay(100)
-                    isQuestionVisible = true
-                    isSwipingEnabled = true
-                }
+                handleSwipe(true)
             }
         },
         buttonEnabled = buttonEnabled,
@@ -96,43 +108,22 @@ fun QuizzTab(
                     detectDragGestures(
                         onDragStart = { startPoint ->
                             dragStartX = startPoint.x
+                            Log.d("ZZZ", "gesture started")
                         },
                         onDragEnd = {
-                            val dragEndX = dragStartX
-                            val dragDistance = abs(dragEndX - dragStartX)
-
+                            val dragDistance = abs(dragCurrentX - dragStartX)
                             if (isSwipingEnabled && dragDistance > dragThreshold) {
-                                if (dragEndX < dragStartX && !isLastQuestion) {
-                                    // Swipe vers la gauche (question suivante)
-                                    isQuestionVisible = false
-                                    slideDirection = 1
-                                    isSwipingEnabled = false
-
-                                    coroutineScope.launch {
-                                        kotlinx.coroutines.delay(300)
-                                        quizViewModel.goToNextQuestion()
-                                        kotlinx.coroutines.delay(100)
-                                        isQuestionVisible = true
-                                        isSwipingEnabled = true
-                                    }
-                                } else if (dragEndX > dragStartX && currentQuestionIndex > 0) {
-                                    // Swipe vers la droite (question précédente)
-                                    isQuestionVisible = false
-                                    slideDirection = -1
-                                    isSwipingEnabled = false
-
-                                    coroutineScope.launch {
-                                        kotlinx.coroutines.delay(300)
-                                        quizViewModel.goToPreviousQuestion()
-                                        kotlinx.coroutines.delay(100)
-                                        isQuestionVisible = true
-                                        isSwipingEnabled = true
-                                    }
+                                if (dragCurrentX < dragStartX && !isLastQuestion) {
+                                    Log.d("ZZZ", "swipe gauche")
+                                    handleSwipe(true)
+                                } else if (dragCurrentX > dragStartX && currentQuestionIndex > 0) {
+                                    Log.d("ZZZ", "swipe droite")
+                                    handleSwipe(false)
                                 }
                             }
                         },
                         onDragCancel = { },
-                        onDrag = { change, _ -> change.consume() }
+                        onDrag = { change, _ -> dragCurrentX = change.position.x }
                     )
                 }
         ) {
@@ -156,12 +147,12 @@ fun QuizzTab(
                     visible = isQuestionVisible,
                     enter = slideInHorizontally(
                         initialOffsetX = { if (slideDirection > 0) it else -it },
-                        animationSpec = tween(300)
-                    ) + fadeIn(animationSpec = tween(300)),
+                        animationSpec = tween(questionTransitionDuration)
+                    ) + fadeIn(animationSpec = tween(questionTransitionDuration)),
                     exit = slideOutHorizontally(
                         targetOffsetX = { if (slideDirection > 0) -it else it },
-                        animationSpec = tween(300)
-                    ) + fadeOut(animationSpec = tween(300))
+                        animationSpec = tween(questionTransitionDuration)
+                    ) + fadeOut(animationSpec = tween(questionTransitionDuration))
                 ) {
                     QuestionComponent(
                         question = currentQuestion,

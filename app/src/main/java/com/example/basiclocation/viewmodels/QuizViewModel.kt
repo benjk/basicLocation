@@ -16,19 +16,19 @@ class QuizViewModel : ViewModel() {
     // Liste des questions du quiz
     private val questions = listOf(
         QuizQuestion(
-            question = "Quelle est la capitale de la France ?",
-            options = listOf("Londres", "Berlin", "Paris", "Madrid"),
-            correctAnswerIndex = 2
-        ),
-        QuizQuestion(
-            question = "Quel est le plus grand océan du monde ?",
-            options = listOf("Atlantique", "Indien", "Arctique", "Pacifique"),
+            question = "À l'origine, le bâtiment central de la place a été construit pour abriter",
+            options = listOf("Un marché couvert", "Un théâtre", "Un tribunal", "Un hôtel de ville"),
             correctAnswerIndex = 3
         ),
         QuizQuestion(
-            question = "Quelle planète est connue comme la planète rouge ?",
-            options = listOf("Venus", "Mars", "Jupiter", "Saturne"),
-            correctAnswerIndex = 1
+            question = "Combien de poteaux trouve-t-on sur les rembardes des balcons du Moulin à café ?",
+            options = listOf("9", "11", "13", "15"),
+            correctAnswerIndex = 2
+        ),
+        QuizQuestion(
+            question = "Comment s'appelle l'association qui gère la salle de théâtre de la Grand-Place",
+            options = listOf("La Barcarolle", "La compagnie du Moulin", "Le Ribot", "La Scène Audomaroise"),
+            correctAnswerIndex = 0
         )
     )
 
@@ -51,12 +51,15 @@ class QuizViewModel : ViewModel() {
     fun getSelectedAnswer(): Int = _selectedAnswers[_currentQuestionIndex.value]
 
     fun goToNextQuestion() {
+        Log.d("ZZZ", "TONEXTQ")
         if (_currentQuestionIndex.value < questions.size - 1) {
             _currentQuestionIndex.value++
         }
     }
 
     fun goToPreviousQuestion() {
+        Log.d("ZZZ", "TOPREVQ")
+
         if (_currentQuestionIndex.value > 0) {
             _currentQuestionIndex.value--
         }

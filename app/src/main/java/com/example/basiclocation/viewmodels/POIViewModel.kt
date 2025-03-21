@@ -37,16 +37,17 @@ class POIViewModel(
             PointOfInterest(
                 id = "poi_0",
                 name = "Ma Maison",
-                description = "Un haut lieu de la tech du secteur audomarois",
+                description = "Notre-Dame de Saint-Omer est une église catholique datant du XIᵉ siècle, qui a traversé les siècles et continue de témoigner de l’histoire de la ville. Ce monument exceptionnel allie richesse architecturale et patrimoine culturel, offrant un intérieur où l’art et l’histoire se rencontrent à chaque coin.",
                 texts = listOf(
-                    "La Grand-Place de Saint-Omer est un lieu où l’histoire et la modernité se rencontrent harmonieusement. Cœur battant de la ville, cette place est un véritable symbole du dynamisme de Saint-Omer, mêlant patrimoine et vie contemporaine.",
-                    "Le bâtiment emblématique de la place, surnommé le \"moulin à café\", est un vestige industriel qui a marqué l’histoire de la ville. Construit au XIXe siècle, il représente l’architecture typique de l’époque, avec sa silhouette distinctive qui rappelle un moulin à vent. Ce bâtiment a joué un rôle majeur dans l’activité commerciale et industrielle locale, et aujourd’hui, il reste un témoin du passé de Saint-Omer.",
-                    "Aujourd’hui, la Grand-Place est un espace animé et vivant, avec des bars, des terrasses et des restaurants qui attirent les habitants et les visiteurs. L'un des points phares de cette place est le théâtre \"La Barcarolle\", un lieu culturel incontournable de l'audomarois."
+                    "La cathédrale Notre-Dame de Saint-Omer est une église catholique datant du XVIᵉ siècle. Elle est toujours en activité et elle est indéniablement l'un des plus beaux monuments historiques de notre ville.",
+                    "La construction de la cathédrale a débuté au XIᵉ siècle et durera près de 5 siècles. À l'origine une chapelle, puis une église, c'est après un incendie en 1033 qu'on décide de la reconstruire en pierre, dans un style roman. C'est à cette époque qu'ont été posées les premières pierres que l'on retrouve encore aujourd'hui. Avec le temps, d'autres types d'architectures ont été utilisés et c'est devenu un mélange de roman, de gothique primitif et de gothique rayonnant.",
+                    "La cathédrale de Saint-Omer regorge de richesses artistiques et historiques. Parmi ses trésors, l'horloge astrolabe du XVIᵉ siècle et le magnifique buffet d'orgue du XVIIIᵉ siècle en font un lieu incontournable pour les amateurs d'art et d'architecture. On y trouve également des œuvres remarquables comme le tableau de Rubens représentant la Descente de la Croix, ainsi que des sculptures fascinantes, telles que la Vierge au Chat et la scène biblique de Shadrach, Méshach et Abed-Nego dans la fournaise. Le triptyque du Grand Dieu de Thérouanne, les dalles du XIIIᵉ siècle et un dallage représentant un pèlerin à quatre chaussures complètent ce patrimoine exceptionnel. Chaque élément de la cathédrale raconte une part de l’histoire et de la culture de Saint-Omer."
                 ),
                 titles = listOf(
-                    "Un peu d'histoire",
-                    "Aujourd'hui"
+                    "La construction",
+                    "Les trésors de la cathédrale"
                 ),
+
                 gameTitle = "Réponds aux questions !",
                 latitude = 50.736942,
                 longitude = 2.251044,
@@ -58,11 +59,11 @@ class POIViewModel(
             PointOfInterest(
                 id = "poi_1",
                 name = "La Grand-Place",
-                description = "Le centre de névralgique de la cité audomaroise, on y retrouve le fameux Moulin à café, ancien Hôtel de ville aujourd'hui devenu un théâtre.",
+                description = "Le centre névralgique de la cité audomaroise, où l'on retrouve le fameux Moulin à café, ancien Hôtel de ville devenu aujourd'hui un théâtre.",
                 texts = listOf(
                     "La Grand-Place de Saint-Omer est un lieu où l’histoire et la modernité se rencontrent harmonieusement. Cœur battant de la ville, cette place est un véritable symbole du dynamisme de Saint-Omer, mêlant patrimoine et vie contemporaine.",
-                    "Le bâtiment emblématique de la place, surnommé le \"moulin à café\", est un vestige industriel qui a marqué l’histoire de la ville. Construit au XIXe siècle, il représente l’architecture typique de l’époque, avec sa silhouette distinctive qui rappelle un moulin à vent. Ce bâtiment a joué un rôle majeur dans l’activité commerciale et industrielle locale, et aujourd’hui, il reste un témoin du passé de Saint-Omer.",
-                    "Aujourd’hui, la Grand-Place est un espace animé et vivant, avec des bars, des terrasses et des restaurants qui attirent les habitants et les visiteurs. L'un des points phares de cette place est le théâtre \"La Barcarolle\", un lieu culturel incontournable de l'audomarois."
+                    "Le bâtiment emblématique de la place, surnommé le \"Moulin à café\", est un vestige industriel qui a marqué l’histoire de la ville. Construit au XIXe siècle, il représente l’architecture typique de l’époque, avec sa silhouette distinctive rappelant un moulin à vent. Ce bâtiment a joué un rôle majeur dans l’activité commerciale et industrielle locale, et aujourd’hui, il reste un témoin du passé de Saint-Omer.",
+                    "Aujourd’hui, la Grand-Place est un espace animé et vivant, avec des bars, des terrasses et des restaurants qui attirent les habitants et les visiteurs. Elle accueille le marché de la ville tous les samedis matin. L'un des points phares de cette place est le théâtre \"La Barcarolle\", un lieu culturel incontournable de l'audomarois."
                 ),
                 titles = listOf(
                     "Un peu d'histoire",
@@ -79,16 +80,17 @@ class POIViewModel(
             PointOfInterest(
                 id = "poi_2",
                 name = "La Cathédrale",
-                description = "Notre-Dame de Saint-Omer est une église catholique datant de 1879.",
+                description = "Notre-Dame de Saint-Omer est une église catholique datant du XIᵉ siècle, qui a traversé les siècles et continue de témoigner de l’histoire de la ville. Ce monument exceptionnel allie richesse architecturale et patrimoine culturel, offrant un intérieur où l’art et l’histoire se rencontrent à chaque coin.",
                 texts = listOf(
-                    "La Grand-Place de Saint-Omer est un lieu où l’histoire et la modernité se rencontrent harmonieusement. Cœur battant de la ville, cette place est un véritable symbole du dynamisme de Saint-Omer, mêlant patrimoine et vie contemporaine.",
-                    "Le bâtiment emblématique de la place, surnommé le \"moulin à café\", est un vestige industriel qui a marqué l’histoire de la ville. Construit au XIXe siècle, il représente l’architecture typique de l’époque, avec sa silhouette distinctive qui rappelle un moulin à vent. Ce bâtiment a joué un rôle majeur dans l’activité commerciale et industrielle locale, et aujourd’hui, il reste un témoin du passé de Saint-Omer.",
-                    "Aujourd’hui, la Grand-Place est un espace animé et vivant, avec des bars, des terrasses et des restaurants qui attirent les habitants et les visiteurs. L'un des points phares de cette place est le théâtre \"La Barcarolle\", un lieu culturel incontournable de l'audomarois."
+                    "La cathédrale Notre-Dame de Saint-Omer est une église catholique datant du XVIᵉ siècle. Elle est toujours en activité et elle est indéniablement l'un des plus beaux monuments historiques de notre ville.",
+                    "La construction de la cathédrale a débuté au XIᵉ siècle et durera près de 5 siècles. À l'origine une chapelle, puis une église, c'est après un incendie en 1033 qu'on décide de la reconstruire en pierre, dans un style roman. C'est à cette époque qu'ont été posées les premières pierres que l'on retrouve encore aujourd'hui. Avec le temps, d'autres types d'architectures ont été utilisés et c'est devenu un mélange de roman, de gothique primitif et de gothique rayonnant.",
+                    "La cathédrale de Saint-Omer regorge de richesses artistiques et historiques. Parmi ses trésors, l'horloge astrolabe du XVIᵉ siècle et le magnifique buffet d'orgue du XVIIIᵉ siècle en font un lieu incontournable pour les amateurs d'art et d'architecture. On y trouve également des œuvres remarquables comme le tableau de Rubens représentant la Descente de la Croix, ainsi que des sculptures fascinantes, telles que la Vierge au Chat et la scène biblique de Shadrach, Méshach et Abed-Nego dans la fournaise. Le triptyque du Grand Dieu de Thérouanne, les dalles du XIIIᵉ siècle et un dallage représentant un pèlerin à quatre chaussures complètent ce patrimoine exceptionnel. Chaque élément de la cathédrale raconte une part de l’histoire et de la culture de Saint-Omer."
                 ),
                 titles = listOf(
-                    "Un peu d'histoire",
-                    "Aujourd'hui"
+                    "La construction",
+                    "Les trésors de la cathédrale"
                 ),
+
                 gameTitle = "Remets les pièces dans l'ordre !",
                 latitude = 50.747345,
                 longitude = 2.252833,
@@ -162,16 +164,26 @@ class POIViewModel(
                         return@forEach
                     }
 
-                    Log.d("POIViewModel", "ID de ressource obtenu pour ${poi.imageName}: $resourceId")
+                    Log.d(
+                        "POIViewModel",
+                        "ID de ressource obtenu pour ${poi.imageName}: $resourceId"
+                    )
 
                     val imageRequest = ImageRequest.Builder(application)
                         .data(resourceId)
                         .listener(
                             onSuccess = { _, _ ->
-                                Log.d("POIViewModel", "Image préchargée avec succès: ${poi.imageName}")
+                                Log.d(
+                                    "POIViewModel",
+                                    "Image préchargée avec succès: ${poi.imageName}"
+                                )
                             },
                             onError = { _, error ->
-                                Log.e("POIViewModel", "Erreur de préchargement: ${poi.imageName}", error.throwable)
+                                Log.e(
+                                    "POIViewModel",
+                                    "Erreur de préchargement: ${poi.imageName}",
+                                    error.throwable
+                                )
                             }
                         )
                         .build()
@@ -185,7 +197,8 @@ class POIViewModel(
     }
 
 
-    class Factory(private val application: Application, private val poiRepository: PoiRepository) : ViewModelProvider.Factory {
+    class Factory(private val application: Application, private val poiRepository: PoiRepository) :
+        ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(POIViewModel::class.java)) {

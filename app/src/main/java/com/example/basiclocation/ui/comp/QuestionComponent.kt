@@ -100,7 +100,8 @@ fun QuestionComponent(
                                         text = option,
                                         fontSize = 16.sp,
                                         textAlign = TextAlign.Center,
-                                        color = primaryColor
+                                        color = primaryColor,
+                                        style = Typography.bodySmall
                                     )
                                 }
                             }
